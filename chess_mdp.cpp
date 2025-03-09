@@ -1,11 +1,20 @@
 #include <iostream>
+#include <vector>
 using namespace std;
+
+struct Coordenadas {
+    int x;
+    int y;
+    int z;
+    int w;
+};
 
 class Chess {        
   public: 
    string piezas[7] = {"VACIO","PEON","AFIL","CABALLO","TORRE","REINA","REY"};
    int tablero[8][8][3];// color de casilla, color de pieza, , tipo de pieza
-
+   //int movimientos[32];
+   std::vector<Coordenadas> movimientos;
 
   void mostrarPiezas() {
         for (int i = 0; i < 7; i++) {
@@ -27,10 +36,10 @@ class Chess {
               } 
            // color de piezas y peones
            if(i == 1 || i == 0){
-               tablero[i][j][1] = -1;
+               tablero[i][j][1] = 1; // piezas negras
                tablero[i][j][2] = 1;}
            else if(i == 6 || i == 7){
-               tablero[i][j][1] = 1;
+               tablero[i][j][1] = -1; // piezas blancas
                tablero[i][j][2] = 1;}
             else{
                 tablero[i][j][1] = 0;
@@ -63,10 +72,9 @@ class Chess {
        }
         cout << endl;
      }
-  }
-     
+  } 
    // obtener siguiente estado
-   void siguiente_estado(accion,jugador){
+   void siguiente_estado(int accion,int jugador){
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
        // accion mover peon d2 a d4
@@ -77,40 +85,38 @@ class Chess {
        //tablero[6][3][1]=0;
        //tablero[6][3][2]=0;
    }
-
    // obtener movimientos validos
-   int movimientos_validos(){
+   void movimientos_validos(int jugador){
        // regresar una lista de los movimientos dado el estado actual
-       int movimientos[];
        // ver cada pieza que puede moverse en el  tablero actual y ver a donde puede moverse
        // condiciones
        //hay jaque? clavada? 
        for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
-               if (tablero[i][j][2]!=0){
+               if (tablero[i][j][1] == jugador){
                    switch(tablero[i][j][2]) {
                     case 1:
                       // peon
-                      if (tablero[i][j][1] == 1){
-                          //j = j-1
-                          //j = j-2 solo en la posición inicial
-                      } else if(tablero[i][j][1] == -1){
-                          //j = j+1
-                          //j = j+2 solo en la posición inicial 
-                      }
+                      movimientos.push_back({i,j,i-1,j});//j = j-1
+                      if (i == 6){movimientos.push_back({i,j,i-2,j});}//j = j-2 solo en la posición inicial
                       continue;
                     case 2:
                        // afil
                        continue;
-                     default:
-                       // code block
+                     }
                    }
                }
-           }
        }
+   }
 
-
-       return movimientos
+   void mostrar_movimientos(){
+       cout << "Movimientos: "<< endl;
+        for (const auto& elemento : movimientos) {
+        std::cout << "(" << elemento.x << ", "
+                  << elemento.y << ", "
+                  << elemento.z << ", "
+                  << elemento.w << ")" << std::endl;
+     }
    }
    // checar quien gana
    // obtener valor y terminar
@@ -120,6 +126,10 @@ class Chess {
 int main(){
     Chess juego; 
     juego.mostrarPiezas();
+    cout << "-1: blanco | 1: negro"<< endl;
     juego.estado_inicial();
+    juego.movimientos_validos(-1);
+    juego.mostrar_movimientos();
+
     return 0;
 }
