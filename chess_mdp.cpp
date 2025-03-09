@@ -72,18 +72,28 @@ class Chess {
        }
         cout << endl;
      }
-  } 
+  }
+
+  void mostrar_estado(){
+      for (int i = 0; i < 8; i++){
+       for (int j = 0; j< 8; j++){
+            cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] <<","<< tablero[i][j][2] << "]"<<" ";
+       }
+        cout << endl;
+     }
+  }
    // obtener siguiente estado
-   void siguiente_estado(int accion,int jugador){
+   void siguiente_estado(int accion[4],int jugador){
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
-       // accion mover peon d2 a d4
+       tablero[accion[2]][accion[3]][1] = tablero[accion[0]][accion[1]][1]; // jugador
+       tablero[accion[2]][accion[3]][2] = tablero[accion[0]][accion[1]][2]; // pieza
+       tablero[accion[0]][accion[1]][1] = 0; // vaciar casilla antigua
+       tablero[accion[0]][accion[1]][2] = 0;
+   }
 
-       //tablero[4][3][1]=tablero[6][3][1];
-       //tablero[4][3][1]=tablero[6][3][2];
-
-       //tablero[6][3][1]=0;
-       //tablero[6][3][2]=0;
+   int minimo(int a, int b){
+    if (a < b){return a;} else {return b;}
    }
    // obtener movimientos validos
    void movimientos_validos(int jugador){
@@ -96,13 +106,81 @@ class Chess {
                if (tablero[i][j][1] == jugador){
                    switch(tablero[i][j][2]) {
                     case 1:
-                      // peon
-                      movimientos.push_back({i,j,i-1,j});//j = j-1
-                      if (i == 6){movimientos.push_back({i,j,i-2,j});}//j = j-2 solo en la posición inicial
+                      // peon 
+                      // Son los únicos que solo pueden hacia enfrente
+                      if (jugador == -1){ // caso blanco
+                           if(tablero[i-1][j][2]==0){
+                           movimientos.push_back({i,j,i-1,j});}//j = j-1
+                           if (i == 6 && tablero[i-2][j][2]==0){movimientos.push_back({i,j,i-2,j});}//j = j-2 solo en la posición inicial
+                        } else{// caso negro
+                            if(tablero[i+1][j][2]==0){
+                            movimientos.push_back({i,j,i+1,j});}//j = j-1
+                            if (i == 6 && tablero[i+2][j][2]==0){movimientos.push_back({i,j,i+2,j});}
+                        }
+                        //como capturan los peones
                       continue;
                     case 2:
-                       // afil
+                       // afil blanco
+                        // derecha arriba
+                       for (int k = 1; k <= minimo(7-j,i);k++){
+                         if( tablero[i-k][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i-k,j+k});
+                         } else{break;}}
+                       // izquierda arriba
+                       for (int k = 1; k <= minimo(j,i);k++){
+                         if(tablero[i-k][j-k][1]!=jugador){
+                            movimientos.push_back({i,j,i-k,j-k});
+                         } else{break;}}
+                       // izquierda abajo
+                       for (int k = 1; k <= minimo(j,7-i);k++){
+                         if(tablero[i+k][j-k][1]!=jugador){
+                            movimientos.push_back({i,j,i+k,j-k});
+                         } else{break;}}
+                       // derecha abajo
+                       for (int k = 1; k <= minimo(7-j,7-i);k++){
+                         if(tablero[i+k][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i+k,j+k});
+                         } else{break;}}
+                       
                        continue;
+                    case 3:{
+                       // caballo
+                       int saltos[8][2] = {{i-2,j+1},{i-2,j-1},{i+2,j-1},{i+2,j+1},{i-1,j+2},{i-1,j-2},{i+1,j+2},{i+1,j-2}};
+                       for (int k = 0; k < 8;k++){
+                         if (-1 < saltos[k][0] && saltos[k][0]< 8 && -1 < saltos[k][1] && saltos[k][1]< 8 && tablero[saltos[k][0]][saltos[k][1]][1]!=jugador)
+                         { 
+                           movimientos.push_back({i,j,saltos[k][0],saltos[k][1]});}
+                       }}
+                       continue;
+                    case 4:
+                      // torre
+                       // arriba
+                       for(int k=1; k <= i;k++){
+                          if(tablero[i-k][j][1]!=jugador){
+                            movimientos.push_back({i,j,i-k,j});
+                          }else{break;}
+                       }
+                       // derecha
+                       // izquierda
+                       // abajo
+                      continue;
+                    case 5:
+                     // reina
+                     // torre + afil
+                     // arriba 
+                       for(int k=1;k <= i;k++){
+                          if(tablero[i-k][j][1]!=jugador){
+                            movimientos.push_back({i,j,i-k,j});
+                          }else{break;}
+                       }
+                     continue;
+                    case 6:
+                     // rey 
+                     // reina limitado
+                     if(tablero[i-1][j-1][1]!=jugador){
+                            movimientos.push_back({i,j,i-1,j-1});
+                          }
+                     continue;
                      }
                    }
                }
@@ -126,10 +204,17 @@ class Chess {
 int main(){
     Chess juego; 
     juego.mostrarPiezas();
-    cout << "-1: blanco | 1: negro"<< endl;
+    cout << "blanco:-1 | negro:1"<< endl;
     juego.estado_inicial();
     juego.movimientos_validos(-1);
     juego.mostrar_movimientos();
+    int x; 
+    cout <<"Número de movimientos válidos: "<<juego.movimientos.size()<< endl;
+    cout << "Elige tu movimiento: "; 
+    cin >> x; 
+    int accion[4] = {juego.movimientos[x].x,juego.movimientos[x].y,juego.movimientos[x].z,juego.movimientos[x].w};
+    juego.siguiente_estado(accion,-1);
+    juego.mostrar_estado();
 
     return 0;
 }
