@@ -11,7 +11,9 @@ struct Coordenadas {
 
 class Chess {        
   public: 
-   string piezas[7] = {"VACIO","PEON","AFIL","CABALLO","TORRE","REINA","REY"};
+   string figuras_blancas[6] = {"♙","♗","♘","♖","♕","♔"};
+   string figuras_negras[6] = {"♟","♝","♞","♜","♛","♚"};
+   string piezas[7] = {"VACIO","PEON","ALFIL","CABALLO","TORRE","REINA","REY"};
    int tablero[8][8][3];// color de casilla, color de pieza, , tipo de pieza
    //int movimientos[32];
    std::vector<Coordenadas> movimientos;
@@ -111,16 +113,23 @@ class Chess {
                       if (jugador == -1){ // caso blanco
                            if(tablero[i-1][j][2]==0){
                            movimientos.push_back({i,j,i-1,j});}//j = j-1
-                           if (i == 6 && tablero[i-2][j][2]==0){movimientos.push_back({i,j,i-2,j});}//j = j-2 solo en la posición inicial
+                           //primer movimiento peon
+                           if (i == 6 && tablero[i-2][j][2]==0){movimientos.push_back({i,j,i-2,j});}
+                           // captura
+                           if (tablero[i-1][j-1][2]==1){movimientos.push_back({i,j,i-1,j-1});}
+                           if (tablero[i-1][j+1][2]==1){movimientos.push_back({i,j,i-1,j+1});}
                         } else{// caso negro
                             if(tablero[i+1][j][2]==0){
                             movimientos.push_back({i,j,i+1,j});}//j = j-1
+                            //primer movimiento peon
                             if (i == 6 && tablero[i+2][j][2]==0){movimientos.push_back({i,j,i+2,j});}
+                            // captura
+                            if (tablero[i+1][j+1][2]==-1){movimientos.push_back({i,j,i+1,j+1});}
+                            if (tablero[i+1][j-1][2]==-1){movimientos.push_back({i,j,i+1,j-1});}
                         }
-                        //como capturan los peones
                       continue;
                     case 2:
-                       // afil blanco
+                       // afil
                         // derecha arriba
                        for (int k = 1; k <= minimo(7-j,i);k++){
                          if( tablero[i-k][j+k][1]!=jugador){
@@ -161,25 +170,82 @@ class Chess {
                           }else{break;}
                        }
                        // derecha
+                       for(int k=1; k <= 7-j;k++){
+                          if(tablero[i][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i,j+k});
+                          }else{break;}
+                       } 
                        // izquierda
+                       for(int k=1; k <=j;k++){
+                          if(tablero[i][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i,j+k});
+                          }else{break;}
+                       } 
                        // abajo
+                       for(int k=1; k <=7-i;k++){
+                          if(tablero[i+k][j][1]!=jugador){
+                            movimientos.push_back({i,j,i+k,j});
+                          }else{break;}
+                       } 
                       continue;
                     case 5:
-                     // reina
-                     // torre + afil
-                     // arriba 
-                       for(int k=1;k <= i;k++){
+                    // reina
+                     // parte de afil
+                      // derecha arriba
+                       for (int k = 1; k <= minimo(7-j,i);k++){
+                         if( tablero[i-k][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i-k,j+k});
+                         } else{break;}}
+                       // izquierda arriba
+                       for (int k = 1; k <= minimo(j,i);k++){
+                         if(tablero[i-k][j-k][1]!=jugador){
+                            movimientos.push_back({i,j,i-k,j-k});
+                         } else{break;}}
+                       // izquierda abajo
+                       for (int k = 1; k <= minimo(j,7-i);k++){
+                         if(tablero[i+k][j-k][1]!=jugador){
+                            movimientos.push_back({i,j,i+k,j-k});
+                         } else{break;}}
+                       // derecha abajo
+                       for (int k = 1; k <= minimo(7-j,7-i);k++){
+                         if(tablero[i+k][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i+k,j+k});
+                         } else{break;}}
+                     // parte de torre
+                      // arriba
+                       for(int k=1; k <= i;k++){
                           if(tablero[i-k][j][1]!=jugador){
                             movimientos.push_back({i,j,i-k,j});
                           }else{break;}
                        }
+                       // derecha
+                       for(int k=1; k <= 7-j;k++){
+                          if(tablero[i][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i,j+k});
+                          }else{break;}
+                       } 
+                       // izquierda
+                       for(int k=1; k <=j;k++){
+                          if(tablero[i][j+k][1]!=jugador){
+                            movimientos.push_back({i,j,i,j+k});
+                          }else{break;}
+                       } 
+                       // abajo
+                       for(int k=1; k <=7-i;k++){
+                          if(tablero[i+k][j][1]!=jugador){
+                            movimientos.push_back({i,j,i+k,j});
+                          }else{break;}
+                       } 
                      continue;
                     case 6:
                      // rey 
-                     // reina limitado
-                     if(tablero[i-1][j-1][1]!=jugador){
-                            movimientos.push_back({i,j,i-1,j-1});
-                          }
+                     int pasos[8][2] = {{i-1,j},{i-1,j+1},{i,j-1},{i+1,j+1}
+                                       ,{i+1,j},{i+1,j-1},{i,j-1},{i-1,j-1}};
+                     for (int k=0; k<8 ;k++){
+                         if(-1< pasos[k][0] && pasos[k][0]<8 && -1< pasos[k][1] && pasos[k][1]<8 && tablero[pasos[k][0]][pasos[k][1]][1]!=jugador)
+                         {movimientos.push_back({i,j,pasos[k][0],pasos[k][1]});}
+                     }
+  
                      continue;
                      }
                    }
@@ -196,6 +262,20 @@ class Chess {
                   << elemento.w << ")" << std::endl;
      }
    }
+
+   void visualizar_tablero(){
+    for (int i = 0; i < 8; i++){
+       for (int j = 0; j< 8; j++){
+           if (tablero[i][j][1]==-1){
+             cout << figuras_blancas[tablero[i][j][2]-1] << " ";
+           } else if (tablero[i][j][1]==1){
+              cout << figuras_negras[tablero[i][j][2]-1] << " ";
+             }
+           else{cout << "#" << " ";}
+       }
+        cout << endl;
+     }
+   }
    // checar quien gana
    // obtener valor y terminar
    // obtener oponente
@@ -207,14 +287,16 @@ int main(){
     cout << "blanco:-1 | negro:1"<< endl;
     juego.estado_inicial();
     juego.movimientos_validos(-1);
-    juego.mostrar_movimientos();
+    //juego.mostrar_movimientos();
+    juego.visualizar_tablero();
     int x; 
     cout <<"Número de movimientos válidos: "<<juego.movimientos.size()<< endl;
     cout << "Elige tu movimiento: "; 
     cin >> x; 
     int accion[4] = {juego.movimientos[x].x,juego.movimientos[x].y,juego.movimientos[x].z,juego.movimientos[x].w};
     juego.siguiente_estado(accion,-1);
-    juego.mostrar_estado();
+    juego.visualizar_tablero();
+    //juego.mostrar_estado();
 
     return 0;
 }
