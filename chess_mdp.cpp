@@ -85,7 +85,7 @@ class Chess {
      }
   }
    // obtener siguiente estado
-   void siguiente_estado(int accion[4],int jugador){
+   void siguiente_estado(int accion[4]){
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
        tablero[accion[2]][accion[3]][1] = tablero[accion[0]][accion[1]][1]; // jugador
@@ -116,16 +116,16 @@ class Chess {
                            //primer movimiento peon
                            if (i == 6 && tablero[i-2][j][2]==0){movimientos.push_back({i,j,i-2,j});}
                            // captura
-                           if (tablero[i-1][j-1][2]==1){movimientos.push_back({i,j,i-1,j-1});}
-                           if (tablero[i-1][j+1][2]==1){movimientos.push_back({i,j,i-1,j+1});}
+                           if (tablero[i-1][j-1][1]==1){movimientos.push_back({i,j,i-1,j-1});}
+                           if (tablero[i-1][j+1][1]==1){movimientos.push_back({i,j,i-1,j+1});}
                         } else{// caso negro
                             if(tablero[i+1][j][2]==0){
                             movimientos.push_back({i,j,i+1,j});}//j = j-1
                             //primer movimiento peon
-                            if (i == 6 && tablero[i+2][j][2]==0){movimientos.push_back({i,j,i+2,j});}
+                            if (i == 1 && tablero[i+2][j][2]==0){movimientos.push_back({i,j,i+2,j});}
                             // captura
-                            if (tablero[i+1][j+1][2]==-1){movimientos.push_back({i,j,i+1,j+1});}
-                            if (tablero[i+1][j-1][2]==-1){movimientos.push_back({i,j,i+1,j-1});}
+                            if (tablero[i+1][j+1][1]==-1){movimientos.push_back({i,j,i+1,j+1});}
+                            if (tablero[i+1][j-1][1]==-1){movimientos.push_back({i,j,i+1,j-1});}
                         }
                       continue;
                     case 2:
@@ -177,8 +177,8 @@ class Chess {
                        } 
                        // izquierda
                        for(int k=1; k <=j;k++){
-                          if(tablero[i][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i,j+k});
+                          if(tablero[i][j-k][1]!=jugador){
+                            movimientos.push_back({i,j,i,j-k});
                           }else{break;}
                        } 
                        // abajo
@@ -255,11 +255,13 @@ class Chess {
 
    void mostrar_movimientos(){
        cout << "Movimientos: "<< endl;
+       int i = 0;
         for (const auto& elemento : movimientos) {
         std::cout << "(" << elemento.x << ", "
                   << elemento.y << ", "
                   << elemento.z << ", "
-                  << elemento.w << ")" << std::endl;
+                  << elemento.w << ") " << i<<std::endl;
+          i++;
      }
    }
 
@@ -279,6 +281,9 @@ class Chess {
    // checar quien gana
    // obtener valor y terminar
    // obtener oponente
+   int obtener_oponente(int jugador){
+       return -1*jugador;
+   }
 };
 
 int main(){
@@ -286,17 +291,23 @@ int main(){
     juego.mostrarPiezas();
     cout << "blanco:-1 | negro:1"<< endl;
     juego.estado_inicial();
-    juego.movimientos_validos(-1);
-    //juego.mostrar_movimientos();
-    juego.visualizar_tablero();
-    int x; 
-    cout <<"Número de movimientos válidos: "<<juego.movimientos.size()<< endl;
-    cout << "Elige tu movimiento: "; 
-    cin >> x; 
-    int accion[4] = {juego.movimientos[x].x,juego.movimientos[x].y,juego.movimientos[x].z,juego.movimientos[x].w};
-    juego.siguiente_estado(accion,-1);
-    juego.visualizar_tablero();
-    //juego.mostrar_estado();
-
+    int jugador = -1;
+    int i = 10;
+     int x;
+    //cout <<"Elige jugador: ";
+    //cin >> jugador;
+    while(i){
+      i--;
+      juego.visualizar_tablero();
+      juego.movimientos_validos(jugador);
+      juego.mostrar_movimientos();
+      cout <<"Número de movimientos válidos: "<<juego.movimientos.size()<< endl;
+      cout << "Elige tu movimiento: "; 
+      cin >> x; 
+      int accion[4] = {juego.movimientos[x].x,juego.movimientos[x].y,juego.movimientos[x].z,juego.movimientos[x].w};
+      juego.siguiente_estado(accion);
+      jugador = juego.obtener_oponente(jugador);
+      juego.movimientos.clear();
+    }
     return 0;
 }
