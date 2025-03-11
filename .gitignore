@@ -1,10 +1,19 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,c++
 
-.vscode
+# Ignorar la carpeta .vscode y su contenido
+.vscode/
 ### C++ ###
 # Prerequisites
 *.d
+
+# Ignorar archivos compilados
+*.o
+*.out
+*.exe
+*.a
+*.so
+*.dll
 
 # Compiled Object files
 *.slo

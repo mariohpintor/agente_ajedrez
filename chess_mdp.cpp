@@ -18,7 +18,8 @@ class Chess {
    int tablero[8][8][3];// color de casilla, color de pieza, , tipo de pieza
    int rey_blanco[2];
    int rey_negro[2]; 
-   vector<Coordenadas> movimientos;
+   vector<Coordenadas> movimientos, moves_jaque;
+
 
   void mostrarPiezas() {
         for (int i = 0; i < 7; i++) {
@@ -75,9 +76,9 @@ class Chess {
           rey_blanco[1] = 4;
           rey_negro[0]= 7;
           rey_negro[1] = 4;
-            cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] <<","<< tablero[i][j][2] << "]"<<" ";
+            //cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] <<","<< tablero[i][j][2] << "]"<<" ";
        }
-        cout << endl;
+        //cout << endl;
      }
   }
 
@@ -90,27 +91,33 @@ class Chess {
      }
   }
    // obtener siguiente estado
-   void siguiente_estado(int accion[4]){
+   void siguiente_estado(Coordenadas accion){
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
+       /*
        tablero[accion[2]][accion[3]][1] = tablero[accion[0]][accion[1]][1]; // jugador
        tablero[accion[2]][accion[3]][2] = tablero[accion[0]][accion[1]][2]; // pieza
        tablero[accion[0]][accion[1]][1] = 0; // vaciar casilla antigua
-       tablero[accion[0]][accion[1]][2] = 0;
+       tablero[accion[0]][accion[1]][2] = 0;*/
+       tablero[accion.z][accion.w][1] = tablero[accion.x][accion.y][1]; // jugador
+       tablero[accion.z][accion.w][2] = tablero[accion.x][accion.y][2]; // pieza
+       tablero[accion.x][accion.y][1] = 0; // vaciar casilla antigua
+       tablero[accion.x][accion.y][2] = 0;
    }
 
    int minimo(int a, int b){
     if (a < b){return a;} else {return b;}
    }
    // obtener movimientos validos
-   void  movimientos_validos(int jugador){
+   vector<Coordenadas>  movimientos_validos(int jugador){
        // regresar una lista de los movimientos dado el estado actual
        // ver cada pieza que puede moverse en el  tablero actual y ver a donde puede moverse
        // condiciones
        //hay jaque? clavada? 
+       vector<Coordenadas> movimientos;
        for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
-               //if (!checar_jaque){}
+              
                if (tablero[i][j][1] == jugador){
                    switch(tablero[i][j][2]) {
                     case 1:
@@ -257,10 +264,18 @@ class Chess {
                    }
                }
        }
+       return movimientos;
    }
    // falta enroque
+   void enroque(int jugador){
+     // se han movido rey y torres?
+     // hay espacio?
+     // el espacio esta bajo ataque?
+     // intercambiar rey con torre
+   }
 
-   void mostrar_movimientos(){
+
+   void mostrar_movimientos(vector<Coordenadas> movimientos){
        cout << "Movimientos: "<< endl;
        int i = 0;
         for (const auto& elemento : movimientos) {
@@ -280,7 +295,7 @@ class Chess {
            } else if (tablero[i][j][1]==1){
               cout << figuras_negras[tablero[i][j][2]-1] << " ";
              }
-           else{cout << "#" << " ";}
+           else{cout << "O" << " ";}
        }
         cout << endl;
      }
@@ -290,14 +305,14 @@ class Chess {
     /*dado el estado ver si dentro de los movimientos validos 
      la posición del rey esta ahi
      si jugador ha hecho su jugada 
-      ver si el rey de -jugador esta eb jaque*/
+      ver si el rey de -jugador esta en jaque*/
       int rey[2];
       if(-1*jugador == 1){rey[0] = rey_negro[0];
           rey[1]= rey_negro[1];}
       else{rey[0] = rey_blanco[0];
           rey[1]= rey_blanco[1];}
-      movimientos.clear();
-      movimientos_validos(jugador);
+      //movimientos.clear();
+      movimientos = movimientos_validos(jugador);
       for (const auto& elemento : movimientos) {
           if(elemento.y ==rey[0] && elemento.w == rey[1]){
             return true;
@@ -306,10 +321,28 @@ class Chess {
      return false;
    }
 
+   void movimientos_validos_jaque(int jugador){
+       //movimientos.clear();
+       vector<Coordenadas> moves;
+       Coordenadas accion_inversa; 
+       moves = movimientos_validos(jugador);
+       for (const auto& elemento : moves){
+           siguiente_estado(elemento);
+           if(checar_jaque(-1*jugador)){ 
+             accion_inversa.x  = elemento.z;
+             accion_inversa.y = elemento.w;
+             accion_inversa.z = elemento.x;
+             accion_inversa.w = elemento.y; // revertir accion 
+             siguiente_estado(accion_inversa);
+           } else{
+              moves_jaque.push_back(elemento);
+           }
+       }
+   }
+
    bool checar_jaque_mate(int jugador){
-    /* ver si para algún movimiento del jugador en jaque elimina el jaque
-       para cada movimiento de movimientos_validos(jugador) ver si 
-       checar_jaque(-jugador,movimientos_jaqueadores)==True */
+     if(moves_jaque.size()<1){ return true;}
+     else{ return false;} 
     return false;
    }
    // obtener valor y terminar
@@ -325,34 +358,38 @@ class Chess {
 };
 
 int main(){
-    system("Color 0A"); 
     Chess juego; 
     juego.mostrarPiezas();
     cout << "blanco:-1 | negro:1"<< endl;
     juego.estado_inicial();
-    int jugador = -1;
-     int x,i=0;
+    int jugador = -1,x,i=0,sum = 0;
+    cout << "Jugadas aleatorias"<< endl;
     //cout <<"Elige jugador: ";
     //cin >> jugador;
-    while(true){
+    while(i<50){
       juego.visualizar_tablero(); // mejor en terminal con fondo blanco y texto negro
-      juego.movimientos_validos(jugador);
-      //juego.mostrar_movimientos();
-      cout <<"Número de movimientos válidos: "<< juego.movimientos.size()<< endl;
+      juego.movimientos = juego.movimientos_validos(jugador);
+      sum+= juego.movimientos.size();
+      //cout << "Jugador: "<< jugador<< endl; 
+      //juego.mostrar_movimientos(juego.movimientos);
+      //cout <<"Número de movimientos válidos: "<< juego.movimientos.size()<< endl;
       cout << "Número de jugada: "<< i++ << endl;
-      cout << "Elige tu movimiento: "; 
+      //cout << "Elige tu movimiento: "; 
       //cin >> x;
       x = rand()% juego.movimientos.size();
-      cout << x << endl;
-      sleep(1);
-      int accion[4] = {juego.movimientos[x].x,juego.movimientos[x].y,juego.movimientos[x].z,juego.movimientos[x].w};
-      juego.siguiente_estado(accion);
-      juego.movimientos.clear();
+      //cout << x << endl;
+      //sleep(1);
+      juego.siguiente_estado(juego.movimientos[x]);
+      //juego.movimientos.clear();
       if (juego.checar_jaque(jugador)){
         cout << "Jaque a rey "<< -1*jugador;
+        juego.movimientos_validos_jaque(-1*jugador);
+        juego.mostrar_movimientos(juego.moves_jaque);
         break;}
+      //juego.movimientos.clear();
       jugador = juego.obtener_oponente(jugador);
       
     }
+    cout<< "Media de movimientos validos: "<< sum/i ; 
     return 0;
 }
