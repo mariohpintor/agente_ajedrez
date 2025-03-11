@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <unistd.h>
 using namespace std;
 
 struct Coordenadas {
@@ -15,8 +16,9 @@ class Chess {
    string figuras_negras[6] = {"♟","♝","♞","♜","♛","♚"};
    string piezas[7] = {"VACIO","PEON","ALFIL","CABALLO","TORRE","REINA","REY"};
    int tablero[8][8][3];// color de casilla, color de pieza, , tipo de pieza
-   //int movimientos[32];
-   std::vector<Coordenadas> movimientos;
+   int rey_blanco[2];
+   int rey_negro[2]; 
+   vector<Coordenadas> movimientos;
 
   void mostrarPiezas() {
         for (int i = 0; i < 7; i++) {
@@ -69,7 +71,10 @@ class Chess {
           //reyes
           tablero[0][4][2] = 6;
           tablero[7][4][2] = 6;
-
+          rey_blanco[0]= 0;
+          rey_blanco[1] = 4;
+          rey_negro[0]= 7;
+          rey_negro[1] = 4;
             cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] <<","<< tablero[i][j][2] << "]"<<" ";
        }
         cout << endl;
@@ -98,13 +103,14 @@ class Chess {
     if (a < b){return a;} else {return b;}
    }
    // obtener movimientos validos
-   void movimientos_validos(int jugador){
+   void  movimientos_validos(int jugador){
        // regresar una lista de los movimientos dado el estado actual
        // ver cada pieza que puede moverse en el  tablero actual y ver a donde puede moverse
        // condiciones
        //hay jaque? clavada? 
        for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
+               //if (!checar_jaque){}
                if (tablero[i][j][1] == jugador){
                    switch(tablero[i][j][2]) {
                     case 1:
@@ -252,6 +258,7 @@ class Chess {
                }
        }
    }
+   // falta enroque
 
    void mostrar_movimientos(){
        cout << "Movimientos: "<< endl;
@@ -279,7 +286,38 @@ class Chess {
      }
    }
    // checar quien gana
+   bool checar_jaque(int jugador){
+    /*dado el estado ver si dentro de los movimientos validos 
+     la posición del rey esta ahi
+     si jugador ha hecho su jugada 
+      ver si el rey de -jugador esta eb jaque*/
+      int rey[2];
+      if(-1*jugador == 1){rey[0] = rey_negro[0];
+          rey[1]= rey_negro[1];}
+      else{rey[0] = rey_blanco[0];
+          rey[1]= rey_blanco[1];}
+      movimientos.clear();
+      movimientos_validos(jugador);
+      for (const auto& elemento : movimientos) {
+          if(elemento.y ==rey[0] && elemento.w == rey[1]){
+            return true;
+          }else{return false;}
+     }
+     return false;
+   }
+
+   bool checar_jaque_mate(int jugador){
+    /* ver si para algún movimiento del jugador en jaque elimina el jaque
+       para cada movimiento de movimientos_validos(jugador) ver si 
+       checar_jaque(-jugador,movimientos_jaqueadores)==True */
+    return false;
+   }
    // obtener valor y terminar
+   int valor_terminar(int jugador){
+    if (checar_jaque_mate(jugador)){return 1;} // gano jugador
+    else{ return -1;} // perdio jugador
+    return 0;
+   }
    // obtener oponente
    int obtener_oponente(int jugador){
        return -1*jugador;
@@ -287,27 +325,34 @@ class Chess {
 };
 
 int main(){
+    system("Color 0A"); 
     Chess juego; 
     juego.mostrarPiezas();
     cout << "blanco:-1 | negro:1"<< endl;
     juego.estado_inicial();
     int jugador = -1;
-    int i = 10;
-     int x;
+     int x,i=0;
     //cout <<"Elige jugador: ";
     //cin >> jugador;
-    while(i){
-      i--;
-      juego.visualizar_tablero();
+    while(true){
+      juego.visualizar_tablero(); // mejor en terminal con fondo blanco y texto negro
       juego.movimientos_validos(jugador);
-      juego.mostrar_movimientos();
-      cout <<"Número de movimientos válidos: "<<juego.movimientos.size()<< endl;
+      //juego.mostrar_movimientos();
+      cout <<"Número de movimientos válidos: "<< juego.movimientos.size()<< endl;
+      cout << "Número de jugada: "<< i++ << endl;
       cout << "Elige tu movimiento: "; 
-      cin >> x; 
+      //cin >> x;
+      x = rand()% juego.movimientos.size();
+      cout << x << endl;
+      sleep(1);
       int accion[4] = {juego.movimientos[x].x,juego.movimientos[x].y,juego.movimientos[x].z,juego.movimientos[x].w};
       juego.siguiente_estado(accion);
-      jugador = juego.obtener_oponente(jugador);
       juego.movimientos.clear();
+      if (juego.checar_jaque(jugador)){
+        cout << "Jaque a rey "<< -1*jugador;
+        break;}
+      jugador = juego.obtener_oponente(jugador);
+      
     }
     return 0;
 }
