@@ -2,17 +2,20 @@
 #include <iostream>
 #include <vector>
 
-    // Constructor que recibe una referencia a Chess
-    Nodo::Nodo(Chess& chessInstance, int args, int parent, Coordenadas accion) : chess(chessInstance) {
-        // Inicializar el nodo con la instancia de Chess
-       std::vector <int> hijos;
-       int visit_count = 0;
-       int value_sum = 0; 
+
+    MCTS::MCTS(Chess& chessInstance, Nodo& nodoInstance): chess(chessInstance),nodo(nodoInstance){
+           
     }
 
-    // Métodos para trabajar con Chess
-    void  Nodo::estado_inicial() {
-        // Ejemplo: Usar la instancia de Chess para realizar un movimiento
-        chess.estado_inicial();
-        chess.visualizar_tablero();
+    void MCTS::busquedas(){
+        // definir raíz
+        for (int i=0;i< 3; i++ ){
+            std::cout << "mensaje: "<< i <<std::endl;
+            // selección
+            // expansión
+            // simulación
+            // retropagación
+        }
+
+        // return conteo_visitas
     }

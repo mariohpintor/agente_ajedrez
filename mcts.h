@@ -1,21 +1,20 @@
 #ifndef MCTS_H  // Guardia de inclusión
 #define MCTS_H
 
-#include "Chess.h"  // Incluir la clase Chess
+#include "chess.h" 
+#include "nodo.h"
 
 
-class Nodo {
-private:
+class MCTS{
+    private:
     Chess& chess;  // Referencia a Chess
-    // Chess* chess;  // Puntero a Chess (opcional)
+    Nodo& nodo;    // Referencia a Nodo
 
-public:
-    // Constructor
-    Nodo(Chess& chessInstance,int args, int parent, Coordenadas accion);  // Usando referencia
-    // Nodo(Chess* chessInstance);  // Usando puntero
-
-    // Métodos
-    void estado_inicial();
+    public:
+      // Constructor
+      MCTS(Chess& chessInstance, Nodo& nodoInstance);
+      // Métodos
+      void busquedas();
 };
 
 #endif  // Fin de la guardia de inclusión

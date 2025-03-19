@@ -1,4 +1,4 @@
-#include "Chess.h"
+#include "chess.h"
 #include <iostream>
 using namespace std;
 
