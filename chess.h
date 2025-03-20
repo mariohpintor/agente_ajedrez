@@ -27,6 +27,7 @@ public:
     int rey_negro[2];
     std::vector<Coordenadas> movimientos;
     std::vector<Coordenadas> moves_jaque;
+    Coordenadas info_enroque;
 
     void mostrarPiezas();
     void estado_inicial();
@@ -34,7 +35,8 @@ public:
     void siguiente_estado(Coordenadas accion);
     int minimo(int a, int b);
     std::vector<Coordenadas>  movimientos_validos(int jugador);
-    void enroque(int jugador);
+    void checar_enroque(int jugador);
+    void enroque(int tipo_enroque);
     void mostrar_movimientos(std::vector<Coordenadas> movimientos);
     void visualizar_tablero();
     bool checar_jaque(int jugador);

@@ -27,7 +27,7 @@ int main(){
       juego.siguiente_estado(juego.movimientos[x]);
       //juego.movimientos.clear();
       if (juego.checar_jaque(jugador)){
-        cout << "Jaque a rey "<< -1*jugador;
+        cout << "Jaque a rey "<< -1*jugador << endl;
         juego.movimientos_validos_jaque(-1*jugador);
         juego.mostrar_movimientos(juego.moves_jaque);
         break;}

@@ -92,15 +92,27 @@ Chess::Chess() {
    void Chess::siguiente_estado(Coordenadas accion) {
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
-       /*
-       tablero[accion[2]][accion[3]][1] = tablero[accion[0]][accion[1]][1]; // jugador
-       tablero[accion[2]][accion[3]][2] = tablero[accion[0]][accion[1]][2]; // pieza
-       tablero[accion[0]][accion[1]][1] = 0; // vaciar casilla antigua
-       tablero[accion[0]][accion[1]][2] = 0;*/
+
+       if (accion.x > 7){
+          if (accion.x == 8){enroque(1);} else {enroque(2);}
+       } else{
+        //guardar posición de reyes
+         if(tablero[accion.x][accion.y][2] == 6){
+          if (tablero[accion.x][accion.y][1] == -1) {
+            rey_blanco[0] = accion.z;
+            rey_blanco[1] = accion.w;
+           } else {
+            rey_negro[0] = accion.z;
+            rey_negro[1] = accion.w;
+           }
+         }
+
        tablero[accion.z][accion.w][1] = tablero[accion.x][accion.y][1]; // jugador
        tablero[accion.z][accion.w][2] = tablero[accion.x][accion.y][2]; // pieza
        tablero[accion.x][accion.y][1] = 0; // vaciar casilla antigua
        tablero[accion.x][accion.y][2] = 0;
+       }
+       
    }
 
    int Chess::minimo(int a, int b) {
@@ -111,7 +123,12 @@ Chess::Chess() {
        // regresar una lista de los movimientos dado el estado actual
        // ver cada pieza que puede moverse en el  tablero actual y ver a donde puede moverse
        // condiciones
-       //hay jaque? clavada? 
+       // hay clavada? 
+       int row;
+        if(jugador == -1){row = 7;}
+          else {row = 0;}
+       if (tablero[row][4][2] == 6){checar_enroque(jugador);}
+
        vector<Coordenadas> movimientos;
        for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
@@ -262,14 +279,88 @@ Chess::Chess() {
                    }
                }
        }
+
        return movimientos;
    }
-   // falta enroque
-   void Chess::enroque(int jugador) {
-     // se han movido rey y torres?
-     // hay espacio?
-     // el espacio esta bajo ataque?
+
+   void Chess::checar_enroque(int jugador){
+     // esta funcion regresa el tipo de enroque disponible
+     //info_enroque = {8,1,2,0} primer num de diferenciacion, .y = 1 largo, .z = 2 corto, .w = jugador
+      info_enroque.x = 8;
+      info_enroque.w = jugador;
+      int row;
+      if(jugador == -1){row = 7;}
+      else {row = 0;}
+     // Verifiquemos las condiciones
+     // hay espacio y las piezas estan en su lugar?
+        if(tablero[row][4][2] == 6){
+           // enroque largo
+           if (tablero[row][0][2] == 4 && tablero[row][1][2]==0 && tablero[row][2][2]==0 && tablero[row][3][2]==0){
+              info_enroque.y = 1;
+              movimientos.push_back({8,1,1,1});
+            } else{ info_enroque.y = 0 ;}
+          // enroque corto
+          if (tablero[row][7][2] == 4 && tablero[row][5][2]==0 && tablero[row][6][2]==0){
+             info_enroque.z = 2;
+             movimientos.push_back({9,2,2,2});
+            } else{ info_enroque.z = 0;}
+       }
+
+       // el espacio esta bajo ataque?
+
+    }
+
+   void Chess::enroque(int tipo_enroque) { 
      // intercambiar rey con torre
+     // esta funcion ejecuta el tipo de enroque
+      int row;
+      if(info_enroque.w == -1){row = 7;}
+      else {row = 0;}
+         switch (tipo_enroque){
+        // enroque largo
+          case 1:
+            tablero[row][2][2]= 6;
+            tablero[row][2][1]= info_enroque.w;
+            tablero[row][3][2]= 4;
+            tablero[row][3][1]= info_enroque.w;
+
+            tablero[row][4][2] = 0;
+            tablero[row][4][1] = 0;
+            tablero[row][0][1] = 0;
+            tablero[row][0][2] = 0;
+
+            if (info_enroque.w == -1){
+                rey_blanco[0] = row;
+                rey_blanco[1] = 2;
+            }else{
+                rey_negro[0] = row;
+                rey_negro[1] = 2;
+            }
+
+           break;
+        // enroque corto
+          case 2:
+            tablero[row][6][2]= 6;
+            tablero[row][6][1]= info_enroque.w;
+            tablero[row][5][2]= 4;
+            tablero[row][5][1]= info_enroque.w;
+
+            tablero[row][4][1] = 0;
+            tablero[row][4][2] = 0;
+            tablero[row][7][1] = 0;
+            tablero[row][7][2] = 0;
+
+            if (info_enroque.w == -1){
+                rey_blanco[0] = row;
+                rey_blanco[1] = 6;
+            }else{
+                rey_negro[0] = row;
+                rey_negro[1] = 6;
+            }
+
+           break;
+     }
+
    }
 
 
