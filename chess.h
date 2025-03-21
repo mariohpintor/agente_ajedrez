@@ -29,7 +29,7 @@ public:
     //std::string figuras_blancas[6];
     std::string figuras_negras[6];
     std::string piezas[7];
-    std::string columnas[8];
+    std::string columnas;
     int tablero[8][8][3];  // [fila][columna][color_casilla, color_pieza, tipo_pieza]
     int rey_blanco[2];
     int rey_negro[2];

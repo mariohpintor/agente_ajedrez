@@ -18,10 +18,11 @@ Chess::Chess() {
     piezas[2] = "ALFIL"; piezas[3] = "CABALLO";
     piezas[4] = "TORRE"; piezas[5] = "REINA";
     piezas[6] = "REY";
-
+    /*
     columnas[0] = "A"; columnas[1] = "B"; columnas[2] = "C";
     columnas[3] = "D"; columnas[4] = "E"; columnas[5] = "F";
-    columnas[6] = "G"; columnas[7] = "H";
+    columnas[6] = "G"; columnas[7] = "H";*/
+    columnas = "ABCDEFGH";
 }
   void Chess::mostrarPiezas() {
         for (int i = 0; i < 7; i++) {
@@ -376,19 +377,19 @@ Chess::Chess() {
    }
 
    Coordenadas Chess::notacion_a_movimiento(std::string move){
-       //F6-D5
+       //E2-E4 (6,4,4,4)
        int i;
        Coordenadas accion;
-       accion.x = 8 - move[1];
+       accion.x = 8 - (move[1] - '0');
        for ( i = 0; i< 8;i++){
-         if(to_string(move[0]) == columnas[i]){break;}
+         if(move[0] == columnas[i]){break;}
        }
-       accion.y = i-1;
+       accion.y = i;
        for ( i = 0; i< 8;i++){
-         if(to_string(move[3]) == columnas[i]){break;}
+         if(move[3] == columnas[i]){break;}
        }
-       accion.z = 8 - move[4];
-       accion.w = i-1;
+       accion.z = 8 - (move[4] - '0');
+       accion.w = i;
 
        return accion;
 

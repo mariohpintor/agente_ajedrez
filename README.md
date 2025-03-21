@@ -42,10 +42,6 @@ Otros simbolos importantes:
 
 Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza, excepto los peones.
 
-## Cosas por hacer
-- Implementar clavadas
-- Terminar jaque
-
 ## Ejemplos para verificar funcionamiento de reglas
 **Mate al pastor**:  
 1. E4 E5 
@@ -75,5 +71,8 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 5. 26, 4
 6. 2
 
-*arreglar jaque*
+## Cosas por hacer
+- Implementar clavadas
+- Terminar jaque
+- *arreglar jaque*
 
