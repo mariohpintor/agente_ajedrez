@@ -51,8 +51,8 @@ public:
     void visualizar_tablero();
     bool checar_jaque(int jugador);
     void movimientos_validos_jaque(int jugador);
-    bool checar_jaque_mate(int jugador);
-    int valor_terminar(int jugador);
+    bool checar_jaque_mate();
+    int valor_terminar();
     int obtener_oponente(int jugador);
 };
 

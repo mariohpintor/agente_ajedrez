@@ -430,23 +430,19 @@ Chess::Chess() {
     }
    // checar quien gana
    bool Chess::checar_jaque(int jugador) {
-    /*dado el estado ver si dentro de los movimientos validos 
-     la posición del rey esta ahi
-     si jugador ha hecho su jugada 
-      ver si el rey de -jugador esta en jaque*/
       int rey[2];
       if(jugador == 1){
           rey[0] = rey_negro[0];
-          rey[1]= rey_negro[1];}
+          rey[1] = rey_negro[1];}
       else{rey[0] = rey_blanco[0];
-          rey[1]= rey_blanco[1];}
+          rey[1] = rey_blanco[1];}
       movimientos.clear();
       movimientos = movimientos_validos(-1*jugador);
       for (const auto& elemento : movimientos) {
           if(elemento.z ==rey[0] && elemento.w == rey[1]){
-            cout << "Posición rey: ["<< rey[0]<<","<< rey[1]<<"]"<<endl;
+            //cout << "Posición rey: ["<< rey[0]<<","<< rey[1]<<"]"<<endl;
             return true;
-          }else{return false;}
+          }
      }
      return false;
    }
@@ -470,14 +466,13 @@ Chess::Chess() {
        }
    }
 
-   bool Chess::checar_jaque_mate(int jugador) {
+   bool Chess::checar_jaque_mate() {
      if(moves_jaque.size()<1){ return true;}
-     else{ return false;} 
     return false;
    }
    // obtener valor y terminar
-   int Chess::valor_terminar(int jugador) {
-    if (checar_jaque_mate(jugador)){return 1;} // gano jugador
+   int Chess::valor_terminar() {
+    if (checar_jaque_mate()){return 1;} // gano jugador
     else{ return -1;} // perdio jugador
     return 0;
    }

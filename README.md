@@ -73,6 +73,6 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 
 ## Cosas por hacer
 - Implementar clavadas
-- Terminar jaque
-- *arreglar jaque*
+- Terminar enroque
+- *arreglar movimientos_validos_jaque*
 
