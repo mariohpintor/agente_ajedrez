@@ -46,6 +46,7 @@ public:
     void checar_enroque(int jugador);
     void enroque(int tipo_enroque);
     std::string movimiento_a_notacion(Coordenadas accion);
+    Coordenadas notacion_a_movimiento(std::string move);
     void mostrar_movimientos(std::vector<Coordenadas> movimientos);
     void visualizar_tablero();
     bool checar_jaque(int jugador);

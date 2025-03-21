@@ -1,6 +1,7 @@
 # Created by https://www.toptal.com/developers/gitignore/api/macos,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=macos,c++
 
+*.dSYM/
 # Ignorar la carpeta .vscode y su contenido
 .vscode/
 ### C++ ###

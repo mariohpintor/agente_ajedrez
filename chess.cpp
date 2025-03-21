@@ -74,9 +74,9 @@ Chess::Chess() {
           //reyes
           tablero[0][4][2] = 6;
           tablero[7][4][2] = 6;
-          rey_blanco[0]= 0;
+          rey_blanco[0]= 7;
           rey_blanco[1] = 4;
-          rey_negro[0]= 7;
+          rey_negro[0]= 0;
           rey_negro[1] = 4;
             //cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] <<","<< tablero[i][j][2] << "]"<<" ";
        }
@@ -293,8 +293,7 @@ Chess::Chess() {
       info_enroque.x = 8;
       info_enroque.w = jugador;
       int row;
-      if(jugador == -1){row = 7;}
-      else {row = 0;}
+      row = jugador == -1 ? 7: 0;
      // Verifiquemos las condiciones
      // hay espacio y las piezas estan en su lugar?
         if(tablero[row][4][2] == 6){
@@ -318,8 +317,7 @@ Chess::Chess() {
      // intercambiar rey con torre
      // esta funcion ejecuta el tipo de enroque
       int row;
-      if(info_enroque.w == -1){row = 7;}
-      else {row = 0;}
+      row = info_enroque.w == -1 ? 7: 0;
          switch (tipo_enroque){
         // enroque largo
           case 1:
@@ -375,6 +373,25 @@ Chess::Chess() {
        notation+= columnas[accion.w];
        notation += to_string(8-accion.z);
        return notation;
+   }
+
+   Coordenadas Chess::notacion_a_movimiento(std::string move){
+       //F6-D5
+       int i;
+       Coordenadas accion;
+       accion.x = 8 - move[1];
+       for ( i = 0; i< 8;i++){
+         if(to_string(move[0]) == columnas[i]){break;}
+       }
+       accion.y = i-1;
+       for ( i = 0; i< 8;i++){
+         if(to_string(move[3]) == columnas[i]){break;}
+       }
+       accion.z = 8 - move[4];
+       accion.w = i-1;
+
+       return accion;
+
    }
 
    void Chess::mostrar_movimientos(vector<Coordenadas> movimientos) {

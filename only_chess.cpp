@@ -38,7 +38,7 @@ void jugadas_aleatorias(){
         player  = jugador == -1 ? "Blanco" : "Negro";
         cout << "Jaque a rey "<< player << endl;
         juego.movimientos_validos_jaque(-1*jugador);
-        //juego.mostrar_movimientos(juego.moves_jaque);
+        juego.mostrar_movimientos(juego.moves_jaque);
         break;}
       jugador = juego.obtener_oponente(jugador);
       
@@ -59,14 +59,14 @@ void juego_manual(){
     cin >> x;
     juego.siguiente_estado(juego.movimientos[x]);
     cout << "Número de jugada: "<< i++ << endl;
-    jugador = juego.obtener_oponente(jugador);
+   
     if (juego.checar_jaque(jugador)){
         player  = jugador == -1 ? "Blanco" : "Negro";
         cout << "Jaque a rey "<< player << endl;
-        juego.movimientos_validos_jaque(jugador);
+        juego.movimientos_validos_jaque(-1*jugador);
         juego.mostrar_movimientos(juego.moves_jaque);
         break;}
-     
+      jugador = juego.obtener_oponente(jugador);
       
     }
 

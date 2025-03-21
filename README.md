@@ -51,13 +51,29 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 1. E4 E5 
 2. D1-H5 B8-C6 
 3. F1-C4 G8-F6 
-4. H5-F7 
+4. H5-F7#
 
 ----
 1. 9, 13
 2. 19, 1
 3. 40, 11
 4. 1
+
+**Mate en la defensa Caro-Kann**:
+1. E2-E4 C7-C6
+2. D2-D4 D7-D5
+3. B1-C3 D5-E4
+4. C3-E4 B8-D7
+5. D1-E2 G8-F6
+6. E4-D6#
+
+----
+1. 9,8
+2. 8, 11
+3. 14, 28
+4. 4, 1
+5. 26, 4
+6. 2
 
 *arreglar jaque*
 
