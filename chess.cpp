@@ -5,9 +5,9 @@ using namespace std;
 // Constructor
 Chess::Chess() {
     // Inicializar figuras
-    figuras_blancas[0] = "♙"; figuras_blancas[1] = "♗";
-    figuras_blancas[2] = "♘"; figuras_blancas[3] = "♖";
-    figuras_blancas[4] = "♕"; figuras_blancas[5] = "♔";
+    //figuras_blancas[0] = "♙"; figuras_blancas[1] = "♗";
+    //figuras_blancas[2] = "♘"; figuras_blancas[3] = "♖";
+    //figuras_blancas[4] = "♕"; figuras_blancas[5] = "♔";
 
     figuras_negras[0] = "♟"; figuras_negras[1] = "♝";
     figuras_negras[2] = "♞"; figuras_negras[3] = "♜";
@@ -18,6 +18,10 @@ Chess::Chess() {
     piezas[2] = "ALFIL"; piezas[3] = "CABALLO";
     piezas[4] = "TORRE"; piezas[5] = "REINA";
     piezas[6] = "REY";
+
+    columnas[0] = "A"; columnas[1] = "B"; columnas[2] = "C";
+    columnas[3] = "D"; columnas[4] = "E"; columnas[5] = "F";
+    columnas[6] = "G"; columnas[7] = "H";
 }
   void Chess::mostrarPiezas() {
         for (int i = 0; i < 7; i++) {
@@ -254,8 +258,8 @@ Chess::Chess() {
                        } 
                        // izquierda
                        for(int k=1; k <=j;k++){
-                          if(tablero[i][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i,j+k});
+                          if(tablero[i][j-k][1]!=jugador){
+                            movimientos.push_back({i,j,i,j-k});
                           }else{break;}
                        } 
                        // abajo
@@ -363,32 +367,49 @@ Chess::Chess() {
 
    }
 
+   std::string Chess::movimiento_a_notacion(Coordenadas accion){
+       std::string notation;
+       notation = columnas[accion.y];
+       notation+= to_string(8-accion.x);
+       notation+="-";
+       notation+= columnas[accion.w];
+       notation += to_string(8-accion.z);
+       return notation;
+   }
 
    void Chess::mostrar_movimientos(vector<Coordenadas> movimientos) {
        cout << "Movimientos: "<< endl;
        int i = 0;
         for (const auto& elemento : movimientos) {
-        std::cout << "(" << elemento.x << ", "
-                  << elemento.y << ", "
-                  << elemento.z << ", "
-                  << elemento.w << ") " << i<<std::endl;
-          i++;
+        
+        std::cout << "[" << elemento.x << ","
+                  << elemento.y << ","
+                  << elemento.z << ","
+                  << elemento.w << "] | ";
+          
+        std::cout << movimiento_a_notacion(elemento) <<" | "<< i <<std::endl;
+        i++;
      }
    }
 
+
    void Chess::visualizar_tablero() {
+    string COLOR_PIEZA;
+    string COLOR_CELDA;
     for (int i = 0; i < 8; i++){
        for (int j = 0; j< 8; j++){
-           if (tablero[i][j][1]==-1){
-             cout << figuras_blancas[tablero[i][j][2]-1] << " ";
-           } else if (tablero[i][j][1]==1){
-              cout << figuras_negras[tablero[i][j][2]-1] << " ";
-             }
-           else{cout << "O" << " ";}
-       }
-        cout << endl;
-     }
-   }
+
+           COLOR_PIEZA = tablero[i][j][1]==-1 ? TEXTO_BLANCO: TEXTO_NEGRO;
+           COLOR_CELDA = tablero[i][j][0]==-1 ? AZUL_CLARO : AZUL_OSCURO;
+           if (tablero[i][j][2] == 0 ){
+               cout << COLOR_CELDA <<" "<<" "<<" " << RESET;
+           }else {
+            cout << COLOR_CELDA << COLOR_PIEZA << " "<< figuras_negras[tablero[i][j][2]-1] << " "<< RESET;
+           }
+         } 
+         cout << endl;  
+      }
+    }
    // checar quien gana
    bool Chess::checar_jaque(int jugador) {
     /*dado el estado ver si dentro de los movimientos validos 
@@ -396,14 +417,16 @@ Chess::Chess() {
      si jugador ha hecho su jugada 
       ver si el rey de -jugador esta en jaque*/
       int rey[2];
-      if(-1*jugador == 1){rey[0] = rey_negro[0];
+      if(jugador == 1){
+          rey[0] = rey_negro[0];
           rey[1]= rey_negro[1];}
       else{rey[0] = rey_blanco[0];
           rey[1]= rey_blanco[1];}
-      //movimientos.clear();
-      movimientos = movimientos_validos(jugador);
+      movimientos.clear();
+      movimientos = movimientos_validos(-1*jugador);
       for (const auto& elemento : movimientos) {
-          if(elemento.y ==rey[0] && elemento.w == rey[1]){
+          if(elemento.z ==rey[0] && elemento.w == rey[1]){
+            cout << "Posición rey: ["<< rey[0]<<","<< rey[1]<<"]"<<endl;
             return true;
           }else{return false;}
      }
@@ -417,7 +440,7 @@ Chess::Chess() {
        moves = movimientos_validos(jugador);
        for (const auto& elemento : moves){
            siguiente_estado(elemento);
-           if(checar_jaque(-1*jugador)){ 
+           if(checar_jaque(jugador)){ 
              accion_inversa.x  = elemento.z;
              accion_inversa.y = elemento.w;
              accion_inversa.z = elemento.x;

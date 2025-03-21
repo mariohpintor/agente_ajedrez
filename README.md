@@ -11,7 +11,7 @@ En ```chess.cpp``` está definida la clase del juego de ajedrez y  ```chess.h```
  g++ -std=c++11 -o only_chess chess.cpp only_chess.cpp
 ```
 
-En ```chess_mdp.cpp``` es lo mismo que lo anterior, pero en un solo archivo.
+En ```chess_mdp.cpp``` es lo mismo que lo anterior de una versión no actualizada, pero en un solo archivo.
 
 Esta parte es para crear el proceso de decisión de Markov que nos dara principalmente dado un estado las lista de acciones válidas. Y dada una acción el siguiente estado.
 
@@ -20,3 +20,44 @@ Para el MCTS, usamos la clase Nodo y MCTS, para compilarlo usamos ```dev.cpp```:
 ```bash
 g++ -std=c++11 -o dev_program nodo.cpp chess.cpp mcts.cpp dev.cpp
 ```
+
+Para usar las funciones de vizualización asegúrate de que tu terminal soporte caracteres Unicode y colores ANSI.
+
+## Notación para movimientos
+Existen varias convenciones para anotar movimientos como la **algebraica**, aquí se usa notación **Coordenadas**. Por ejemplo:
+
+|**Algebraica**| **Coordenadas**|
+| :------------:| :----------------: |
+|e4  e5       |  E2-E4 E7-E5|
+|Cf3 Cc6  | G1-F3 B8-C6|
+| Axc6 dxc6 |  B5-C6 D7-C6|
+ |d3 Ab4+ | D2-D3 F8-B4|
+| 0-0 Axc3 | E1-G1 B4-C3|
+
+Otros simbolos importantes:
+- 0-0 significa enroque corto
+- 0-0-0 significa enroque largo
+- "+" significa jaque
+- "#", "++", "≠" o "‡" significa jaque mate
+
+Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza, excepto los peones.
+
+## Cosas por hacer
+- Implementar clavadas
+- Terminar jaque
+
+## Ejemplos para verificar funcionamiento de reglas
+**Mate al pastor**:  
+1. E4 E5 
+2. D1-H5 B8-C6 
+3. F1-C4 G8-F6 
+4. H5-F7 
+
+----
+1. 9, 13
+2. 19, 1
+3. 40, 11
+4. 1
+
+*arreglar jaque*
+

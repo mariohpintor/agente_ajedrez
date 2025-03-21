@@ -4,6 +4,13 @@
 #include <string>
 #include <vector>
 
+// Definir colores ANSI
+#define RESET   "\033[0m"
+#define AZUL_OSCURO  "\033[48;5;21m"  
+#define AZUL_CLARO "\033[48;5;69m"
+#define TEXTO_NEGRO "\033[38;5;232m" 
+#define TEXTO_BLANCO "\033[38;5;255m"
+
 // Definir la estructura Coordenadas
 struct Coordenadas {
     int x;
@@ -19,9 +26,10 @@ public:
     Chess();
 
     // Variables miembro
-    std::string figuras_blancas[6];
+    //std::string figuras_blancas[6];
     std::string figuras_negras[6];
     std::string piezas[7];
+    std::string columnas[8];
     int tablero[8][8][3];  // [fila][columna][color_casilla, color_pieza, tipo_pieza]
     int rey_blanco[2];
     int rey_negro[2];
@@ -37,6 +45,7 @@ public:
     std::vector<Coordenadas>  movimientos_validos(int jugador);
     void checar_enroque(int jugador);
     void enroque(int tipo_enroque);
+    std::string movimiento_a_notacion(Coordenadas accion);
     void mostrar_movimientos(std::vector<Coordenadas> movimientos);
     void visualizar_tablero();
     bool checar_jaque(int jugador);
