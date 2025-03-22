@@ -123,6 +123,101 @@ Chess::Chess() {
    int Chess::minimo(int a, int b) {
     if (a < b){return a;} else {return b;}
    }
+   
+   void Chess::diagonales(int jugador,int i, int j,std::vector<Coordenadas>& movimientos){
+     // derecha arriba
+   for (int k = 1; k <= minimo(7-j,i);k++){
+     if( tablero[i-k][j+k][1] == 0){
+        movimientos.push_back({i,j,i-k,j+k});
+     } else if(tablero[i-k][j+k][1] == -jugador) {
+         movimientos.push_back({i,j,i-k,j+k});
+         break;
+     }
+     else{break;}}
+   // izquierda arriba
+   for (int k = 1; k <= minimo(j,i);k++){
+       if(tablero[i-k][j-k][1] == 0){
+       movimientos.push_back({i,j,i-k,j-k});
+       } else if (tablero[i-k][j-k][1] == -jugador) 
+          {
+           movimientos.push_back({i,j,i-k,j-k});
+           break;
+           }
+           else{break;}
+    }
+   // izquierda abajo
+   for (int k = 1; k <= minimo(j,7-i);k++){
+     if(tablero[i+k][j-k][1] == 0 ){
+        movimientos.push_back({i,j,i+k,j-k});
+     } else if(tablero[i+k][j-k][1] == -jugador){
+        movimientos.push_back({i,j,i+k,j-k});
+        break;
+     } 
+     {break;}}
+   // derecha abajo
+   for (int k = 1; k <= minimo(7-j,7-i);k++){
+     if(tablero[i+k][j+k][1]==0){
+        movimientos.push_back({i,j,i+k,j+k});
+     } else if(tablero[i+k][j+k][1]==-jugador){
+         movimientos.push_back({i,j,i+k,j+k});
+         break;
+     } else
+     {break;}}
+                       
+    }
+
+    void Chess::rectas(int jugador,int i, int j,std::vector<Coordenadas>& movimientos){
+   // arriba
+   for(int k=1; k <= i;k++){
+      if(tablero[i-k][j][1] == 0 ){
+        movimientos.push_back({i,j,i-k,j});
+      }else if(tablero[i-k][j][1] == -jugador){
+        movimientos.push_back({i,j,i-k,j});
+        break;
+    } else
+      {break;}
+   }
+   // derecha
+   for(int k=1; k <= 7-j;k++){
+      if(tablero[i][j+k][1] == 0 ){
+        movimientos.push_back({i,j,i,j+k});
+      }else if(tablero[i][j+k][1] == -jugador){
+        movimientos.push_back({i,j,i-k,j});
+        break;
+    } else {break;}
+   } 
+   // izquierda
+   for(int k=1; k <=j;k++){
+      if(tablero[i][j-k][1] == 0 ){
+        movimientos.push_back({i,j,i,j-k});
+      }else if(tablero[i][j-k][1] == -jugador){
+        movimientos.push_back({i,j,i,j-k});
+        break;
+      }else{break;}
+   } 
+   // abajo
+   for(int k=1; k <=7-i;k++){
+      if(tablero[i+k][j][1]==0){
+        movimientos.push_back({i,j,i+k,j});
+      }else if(tablero[i+k][j][1]==-jugador){
+        movimientos.push_back({i,j,i+k,j});
+        break;
+    }else 
+      {break;}
+  }
+   
+}
+/*
+void obtener_rey_openente(int jugador){
+    if (jugador == -1){
+        rey[0] = rey_negro[0];
+        rey[1] = rey_negro[1];
+    }else{
+        rey[0] = rey_blanco[0];
+        rey[1] = rey_blanco[1];
+    }
+}*/
+
    // obtener movimientos validos
    std::vector<Coordenadas>  Chess::movimientos_validos(int jugador) {
        // regresar una lista de los movimientos dado el estado actual
@@ -162,28 +257,9 @@ Chess::Chess() {
                         }
                       continue;
                     case 2:
-                       // afil
-                        // derecha arriba
-                       for (int k = 1; k <= minimo(7-j,i);k++){
-                         if( tablero[i-k][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i-k,j+k});
-                         } else{break;}}
-                       // izquierda arriba
-                       for (int k = 1; k <= minimo(j,i);k++){
-                         if(tablero[i-k][j-k][1]!=jugador){
-                            movimientos.push_back({i,j,i-k,j-k});
-                         } else{break;}}
-                       // izquierda abajo
-                       for (int k = 1; k <= minimo(j,7-i);k++){
-                         if(tablero[i+k][j-k][1]!=jugador){
-                            movimientos.push_back({i,j,i+k,j-k});
-                         } else{break;}}
-                       // derecha abajo
-                       for (int k = 1; k <= minimo(7-j,7-i);k++){
-                         if(tablero[i+k][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i+k,j+k});
-                         } else{break;}}
-                       
+                       // AFIL
+                        //if (clavada(i,j)){ diagonales(jugador,i,j,movimientos);}
+                       diagonales(jugador,i,j,movimientos);
                        continue;
                     case 3:{
                        // caballo
@@ -196,79 +272,14 @@ Chess::Chess() {
                        continue;
                     case 4:
                       // torre
-                       // arriba
-                       for(int k=1; k <= i;k++){
-                          if(tablero[i-k][j][1]!=jugador){
-                            movimientos.push_back({i,j,i-k,j});
-                          }else{break;}
-                       }
-                       // derecha
-                       for(int k=1; k <= 7-j;k++){
-                          if(tablero[i][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i,j+k});
-                          }else{break;}
-                       } 
-                       // izquierda
-                       for(int k=1; k <=j;k++){
-                          if(tablero[i][j-k][1]!=jugador){
-                            movimientos.push_back({i,j,i,j-k});
-                          }else{break;}
-                       } 
-                       // abajo
-                       for(int k=1; k <=7-i;k++){
-                          if(tablero[i+k][j][1]!=jugador){
-                            movimientos.push_back({i,j,i+k,j});
-                          }else{break;}
-                       } 
+                      rectas(jugador,i,j,movimientos);
                       continue;
                     case 5:
                     // reina
                      // parte de afil
-                      // derecha arriba
-                       for (int k = 1; k <= minimo(7-j,i);k++){
-                         if( tablero[i-k][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i-k,j+k});
-                         } else{break;}}
-                       // izquierda arriba
-                       for (int k = 1; k <= minimo(j,i);k++){
-                         if(tablero[i-k][j-k][1]!=jugador){
-                            movimientos.push_back({i,j,i-k,j-k});
-                         } else{break;}}
-                       // izquierda abajo
-                       for (int k = 1; k <= minimo(j,7-i);k++){
-                         if(tablero[i+k][j-k][1]!=jugador){
-                            movimientos.push_back({i,j,i+k,j-k});
-                         } else{break;}}
-                       // derecha abajo
-                       for (int k = 1; k <= minimo(7-j,7-i);k++){
-                         if(tablero[i+k][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i+k,j+k});
-                         } else{break;}}
+                      diagonales(jugador,i,j,movimientos);
                      // parte de torre
-                      // arriba
-                       for(int k=1; k <= i;k++){
-                          if(tablero[i-k][j][1]!=jugador){
-                            movimientos.push_back({i,j,i-k,j});
-                          }else{break;}
-                       }
-                       // derecha
-                       for(int k=1; k <= 7-j;k++){
-                          if(tablero[i][j+k][1]!=jugador){
-                            movimientos.push_back({i,j,i,j+k});
-                          }else{break;}
-                       } 
-                       // izquierda
-                       for(int k=1; k <=j;k++){
-                          if(tablero[i][j-k][1]!=jugador){
-                            movimientos.push_back({i,j,i,j-k});
-                          }else{break;}
-                       } 
-                       // abajo
-                       for(int k=1; k <=7-i;k++){
-                          if(tablero[i+k][j][1]!=jugador){
-                            movimientos.push_back({i,j,i+k,j});
-                          }else{break;}
-                       } 
+                      rectas(jugador,i,j,movimientos);
                      continue;
                     case 6:
                      // rey 
@@ -301,17 +312,17 @@ Chess::Chess() {
            // enroque largo
            if (tablero[row][0][2] == 4 && tablero[row][1][2]==0 && tablero[row][2][2]==0 && tablero[row][3][2]==0){
               info_enroque.y = 1;
-              movimientos.push_back({8,1,1,1});
-            } else{ info_enroque.y = 0 ;}
+              movimientos.push_back({8,1,1,1});// no compatible con notacion
+            } else { info_enroque.y = 0 ;}
           // enroque corto
           if (tablero[row][7][2] == 4 && tablero[row][5][2]==0 && tablero[row][6][2]==0){
              info_enroque.z = 2;
-             movimientos.push_back({9,2,2,2});
+             movimientos.push_back({9,2,2,2});// no compatible con notacion
             } else{ info_enroque.z = 0;}
        }
 
        // el espacio esta bajo ataque?
-
+       
     }
 
    void Chess::enroque(int tipo_enroque) { 
@@ -428,6 +439,47 @@ Chess::Chess() {
          cout << endl;  
       }
     }
+    
+    // aplicar despues de movimientos_validos
+    void Chess::clavadas(int jugador){
+    // Si una pieza esta clavada no puede moverse
+    // entonces omitimos el calculo de sus movimientos validos
+    // Afil , Torre y Reina son los que pueden clavar
+    // en la trayectoria debe estar Amenaza Pieza Rey
+    for (int i = 0; i < 8; i++){
+           for(int j = 0; j < 8; j++ ){
+              if (tablero[i][j][1] == jugador){
+                    /*Podemo quitar la pieza victima del jugador del tablero con*/
+                  int color, pieza;
+                  color = tablero[i][j][1];
+                  pieza = tablero[i][j][2];
+                  tablero[i][j][1] = 0;
+                  tablero[i][j][2] = 0;
+                  // y ver si existe jaque
+                  if(checar_jaque(jugador)){
+                    piezas_clavadas.push_back(i);
+                    piezas_clavadas.push_back(j);
+                  }
+                  // regresar pieza
+                  tablero[i][j][1] = color;
+                  tablero[i][j][2] = pieza;
+              }
+           }}
+
+        if(piezas_clavadas.size()>0){
+            // quitar piezas clavadas de movimientos
+            for (int j =0; j < movimientos.size();j++){
+                for (int i=0; i < piezas_clavadas.size();i++){
+                   if(movimientos[j].x == i && movimientos[j].y == i+1){
+                    movimientos.erase(movimientos.begin()+j);
+                   } 
+                }
+                
+            }
+            piezas_clavadas.clear();
+        }
+
+     }
    // checar quien gana
    bool Chess::checar_jaque(int jugador) {
       int rey[2];

@@ -82,7 +82,9 @@ void juego_manual(){
   while(true){
     juego.visualizar_tablero();
     juego.movimientos = juego.movimientos_validos(jugador);
+    juego.clavadas(jugador);
     juego.mostrar_movimientos(juego.movimientos);
+    //juego.mostrar_estado();
     player  = jugador == -1 ? "Blanco" : "Negro";
     cout <<"Turno de jugador: " << player << endl;
     cout << "Elige tu movimiento: "; 

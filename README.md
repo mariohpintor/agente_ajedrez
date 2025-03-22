@@ -71,8 +71,7 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 5. 26, 4
 6. 2
 
-## Cosas por hacer
-- Implementar clavadas
-- Terminar enroque
-- *arreglar movimientos_validos_jaque*
-
+## Cosas por corregir
+- Terminar enroque: espacio bajo ataque
+- Testear jaque y jaque mate
+- Notacion de enroque
