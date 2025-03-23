@@ -49,13 +49,13 @@ public:
     void diagonales(int jugador,int i, int j,std::vector<Coordenadas>& movimientos);
     void rectas(int jugador,int i, int j,std::vector<Coordenadas>& movimientos);
     std::vector<Coordenadas>  movimientos_validos(int jugador);
-    void checar_enroque(int jugador);
+    void checar_enroque(int jugador,std::vector<Coordenadas>& movimientos);
     void enroque(int tipo_enroque);
     std::string movimiento_a_notacion(Coordenadas accion);
     Coordenadas notacion_a_movimiento(std::string move);
-    void mostrar_movimientos(std::vector<Coordenadas> movimientos);
+    void mostrar_movimientos(std::vector<Coordenadas>& movimientos);
     void visualizar_tablero();
-    void clavadas(int jugador);
+    void clavadas(int jugador,std::vector<Coordenadas>& movimientos);
     bool checar_jaque(int jugador);
     void movimientos_validos_jaque(int jugador);
     bool checar_jaque_mate();

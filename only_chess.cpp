@@ -24,6 +24,8 @@ int main(){
     //juego.mostrarPiezas();
     //cout << "blanco:-1 | negro:1"<< endl;
     juego.estado_inicial();
+    //std::cout << "\033[37m♟\033[0m" << std::endl;
+    //std::cout << "\033[97m♟\033[0m" << std::endl;
     cout << "Selecciona una opción:"<< endl;
     cout << "1. Juego Normal"<<endl;
     cout << "2. Juego Aleatorio" <<endl;
@@ -82,15 +84,17 @@ void juego_manual(){
   while(true){
     juego.visualizar_tablero();
     juego.movimientos = juego.movimientos_validos(jugador);
-    juego.clavadas(jugador);
+    juego.clavadas(jugador,juego.movimientos); // revisar cambia a jugador
+    juego.checar_enroque(jugador,juego.movimientos);
     juego.mostrar_movimientos(juego.movimientos);
-    //juego.mostrar_estado();
+    juego.mostrar_estado();
     player  = jugador == -1 ? "Blanco" : "Negro";
     cout <<"Turno de jugador: " << player << endl;
     cout << "Elige tu movimiento: "; 
     cin >> x;
     juego.siguiente_estado(juego.movimientos[x]);
     cout << "Número de jugada: "<< i++ << endl;
+     juego.movimientos.clear();
      jugador = juego.obtener_oponente(jugador);
    if (juego.checar_jaque(jugador)){
         player  = jugador == -1 ? "Blanco" : "Negro";
@@ -121,8 +125,8 @@ void seguir_partida(){
     for(int i= 0; i<= tamanios[x]; i++){
       juego.visualizar_tablero();
       juego.siguiente_estado(juego.notacion_a_movimiento(partidas[x][i]));
-      jugador = juego.obtener_oponente(jugador);
       cout << "Número de jugada: "<< i << "| Jugador: "<<jugador<< endl;
+      jugador = juego.obtener_oponente(jugador);
       
     }
     if (juego.checar_jaque(jugador)){

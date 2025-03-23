@@ -72,6 +72,5 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 6. 2
 
 ## Cosas por corregir
-- Terminar enroque: espacio bajo ataque
-- Testear jaque y jaque mate
+- Testear jaque, jaque mate, clavada y enroque
 - Notacion de enroque

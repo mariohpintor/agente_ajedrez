@@ -223,11 +223,11 @@ void obtener_rey_openente(int jugador){
        // regresar una lista de los movimientos dado el estado actual
        // ver cada pieza que puede moverse en el  tablero actual y ver a donde puede moverse
        // condiciones
-       // hay clavada? 
+       /* 
        int row;
         if(jugador == -1){row = 7;}
           else {row = 0;}
-       if (tablero[row][4][2] == 6){checar_enroque(jugador);}
+       if (tablero[row][4][2] == 6){checar_enroque(jugador);}*/
 
        vector<Coordenadas> movimientos;
        for (int i = 0; i < 8; i++){
@@ -299,7 +299,7 @@ void obtener_rey_openente(int jugador){
        return movimientos;
    }
 
-   void Chess::checar_enroque(int jugador){
+   void Chess::checar_enroque(int jugador,vector<Coordenadas>& movimientos){
      // esta funcion regresa el tipo de enroque disponible
      //info_enroque = {8,1,2,0} primer num de diferenciacion, .y = 1 largo, .z = 2 corto, .w = jugador
       info_enroque.x = 8;
@@ -311,18 +311,28 @@ void obtener_rey_openente(int jugador){
         if(tablero[row][4][2] == 6){
            // enroque largo
            if (tablero[row][0][2] == 4 && tablero[row][1][2]==0 && tablero[row][2][2]==0 && tablero[row][3][2]==0){
-              info_enroque.y = 1;
-              movimientos.push_back({8,1,1,1});// no compatible con notacion
-            } else { info_enroque.y = 0 ;}
+              for(int i=0; i< 5; i++){
+                  for ( Coordenadas move: movimientos){
+                    if(row==move.x && i== move.y){
+                    info_enroque.y = 1;
+                    movimientos.push_back({8,1,1,1}); // no compatible con notacion
+                    break;
+                   }else {info_enroque.y= 0;}
+                }}
+            }
+          
           // enroque corto
           if (tablero[row][7][2] == 4 && tablero[row][5][2]==0 && tablero[row][6][2]==0){
-             info_enroque.z = 2;
-             movimientos.push_back({9,2,2,2});// no compatible con notacion
-            } else{ info_enroque.z = 0;}
+            for(int i=5; i< 8; i++){
+                  for ( Coordenadas move: movimientos){
+                    if(row==move.x && i== move.y){
+                    info_enroque.z = 2;
+                    movimientos.push_back({9,2,2,2}); // no compatible con notacion
+                    break;
+                   }else {info_enroque.y= 0;}
+                }}
+          }
        }
-
-       // el espacio esta bajo ataque?
-       
     }
 
    void Chess::enroque(int tipo_enroque) { 
@@ -406,7 +416,7 @@ void obtener_rey_openente(int jugador){
 
    }
 
-   void Chess::mostrar_movimientos(vector<Coordenadas> movimientos) {
+   void Chess::mostrar_movimientos(vector<Coordenadas>& movimientos) {
        cout << "Movimientos: "<< endl;
        int i = 0;
         for (const auto& elemento : movimientos) {
@@ -441,7 +451,7 @@ void obtener_rey_openente(int jugador){
     }
     
     // aplicar despues de movimientos_validos
-    void Chess::clavadas(int jugador){
+    void Chess::clavadas(int jugador,std::vector<Coordenadas>& movimientos){
     // Si una pieza esta clavada no puede moverse
     // entonces omitimos el calculo de sus movimientos validos
     // Afil , Torre y Reina son los que pueden clavar
@@ -449,7 +459,7 @@ void obtener_rey_openente(int jugador){
     for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
               if (tablero[i][j][1] == jugador){
-                    /*Podemo quitar la pieza victima del jugador del tablero con*/
+                    /*Podemos quitar la pieza victima del jugador del tablero con*/
                   int color, pieza;
                   color = tablero[i][j][1];
                   pieza = tablero[i][j][2];
@@ -465,6 +475,8 @@ void obtener_rey_openente(int jugador){
                   tablero[i][j][2] = pieza;
               }
            }}
+
+        cout << piezas_clavadas.size()<< endl;
 
         if(piezas_clavadas.size()>0){
             // quitar piezas clavadas de movimientos
