@@ -36,7 +36,7 @@ public:
     //int rey[2];
     //int piezas_que_clavan[5][2];
     //bool jaque;
-    std::vector<Coordenadas> movimientos;
+    std::vector<Coordenadas> movimientos, movimientos2;
     std::vector<Coordenadas> moves_jaque;
     std::vector<int> piezas_clavadas;
     Coordenadas info_enroque;

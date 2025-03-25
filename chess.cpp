@@ -97,10 +97,11 @@ Chess::Chess() {
    void Chess::siguiente_estado(Coordenadas accion) {
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
-
+       /*
        if (accion.x > 7){
           if (accion.x == 8){enroque(1);} else {enroque(2);}
-       } else{
+       } else{*/
+
         //guardar posición de reyes
          if(tablero[accion.x][accion.y][2] == 6){
           if (tablero[accion.x][accion.y][1] == -1) {
@@ -111,12 +112,13 @@ Chess::Chess() {
             rey_negro[1] = accion.w;
            }
          }
-
+       
+       //if(accion.x <8 && accion.y <8 && accion.z <8 && accion.w <8 ){
        tablero[accion.z][accion.w][1] = tablero[accion.x][accion.y][1]; // jugador
        tablero[accion.z][accion.w][2] = tablero[accion.x][accion.y][2]; // pieza
        tablero[accion.x][accion.y][1] = 0; // vaciar casilla antigua
        tablero[accion.x][accion.y][2] = 0;
-       }
+       //}
        
    }
 
@@ -145,14 +147,14 @@ Chess::Chess() {
            }
            else{break;}
     }
-   // izquierda abajo
+   // izquierda abajo 
    for (int k = 1; k <= minimo(j,7-i);k++){
      if(tablero[i+k][j-k][1] == 0 ){
         movimientos.push_back({i,j,i+k,j-k});
      } else if(tablero[i+k][j-k][1] == -jugador){
         movimientos.push_back({i,j,i+k,j-k});
         break;
-     } 
+     } else
      {break;}}
    // derecha abajo
    for (int k = 1; k <= minimo(7-j,7-i);k++){
@@ -182,7 +184,7 @@ Chess::Chess() {
       if(tablero[i][j+k][1] == 0 ){
         movimientos.push_back({i,j,i,j+k});
       }else if(tablero[i][j+k][1] == -jugador){
-        movimientos.push_back({i,j,i-k,j});
+        movimientos.push_back({i,j,i,j+k});
         break;
     } else {break;}
    } 
@@ -284,7 +286,7 @@ void obtener_rey_openente(int jugador){
                     case 6:
                      // rey 
                      int pasos[8][2] = {{i-1,j},{i-1,j+1},{i,j-1},{i+1,j+1}
-                                       ,{i+1,j},{i+1,j-1},{i,j-1},{i-1,j-1}};
+                                       ,{i+1,j},{i+1,j-1},{i,j+1},{i-1,j-1}};
                      for (int k=0; k<8 ;k++){
                          if(-1< pasos[k][0] && pasos[k][0]<8 && -1< pasos[k][1] && pasos[k][1]<8 && tablero[pasos[k][0]][pasos[k][1]][1]!=jugador)
                          {movimientos.push_back({i,j,pasos[k][0],pasos[k][1]});}
@@ -456,11 +458,12 @@ void obtener_rey_openente(int jugador){
     // entonces omitimos el calculo de sus movimientos validos
     // Afil , Torre y Reina son los que pueden clavar
     // en la trayectoria debe estar Amenaza Pieza Rey
+    int color, pieza;
     for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
               if (tablero[i][j][1] == jugador){
                     /*Podemos quitar la pieza victima del jugador del tablero con*/
-                  int color, pieza;
+                  
                   color = tablero[i][j][1];
                   pieza = tablero[i][j][2];
                   tablero[i][j][1] = 0;
@@ -500,11 +503,12 @@ void obtener_rey_openente(int jugador){
           rey[1] = rey_negro[1];}
       else{rey[0] = rey_blanco[0];
           rey[1] = rey_blanco[1];}
-      movimientos.clear();
-      movimientos = movimientos_validos(-1*jugador);
-      for (const auto& elemento : movimientos) {
+      movimientos2.clear();
+      movimientos2 = movimientos_validos(-1*jugador);
+      for (const auto& elemento : movimientos2) {
+           //cout << elemento.z<< elemento.w << "rey: ["<< rey[0]<<","<< rey[1]<<"]"<<endl;
           if(elemento.z ==rey[0] && elemento.w == rey[1]){
-            //cout << "Posición rey: ["<< rey[0]<<","<< rey[1]<<"]"<<endl;
+            
             return true;
           }
      }
@@ -513,20 +517,27 @@ void obtener_rey_openente(int jugador){
 
    void Chess::movimientos_validos_jaque(int jugador) {
        //movimientos.clear();
+       int pieza[2];
        vector<Coordenadas> moves;
        Coordenadas accion_inversa; 
        moves = movimientos_validos(jugador);
        for (const auto& elemento : moves){
-           siguiente_estado(elemento);
-           if(checar_jaque(jugador)){ 
-             accion_inversa.x  = elemento.z;
-             accion_inversa.y = elemento.w;
-             accion_inversa.z = elemento.x;
-             accion_inversa.w = elemento.y; // revertir accion 
-             siguiente_estado(accion_inversa);
-           } else{
-              moves_jaque.push_back(elemento);
-           }
+            accion_inversa.x  = elemento.z;
+            accion_inversa.y = elemento.w;
+            accion_inversa.z = elemento.x;
+            accion_inversa.w = elemento.y;
+            if(tablero[elemento.z][elemento.w][2] != 0){
+                pieza[0] = tablero[elemento.z][elemento.w][2];
+                pieza[1] = tablero[elemento.z][elemento.w][1];
+            }
+           siguiente_estado(elemento); // que pasa si captura una pieza enemiga?
+           if(!checar_jaque(jugador)){ 
+               moves_jaque.push_back(elemento);
+           } 
+           siguiente_estado(accion_inversa);
+           tablero[elemento.z][elemento.w][1] = pieza[1];
+           tablero[elemento.z][elemento.w][2] = pieza[0];
+
        }
    }
 

@@ -72,5 +72,5 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 6. 2
 
 ## Cosas por corregir
-- Testear jaque, jaque mate, clavada y enroque
-- Notacion de enroque
+- Testear clavada y enroque
+- Notación de enroque
