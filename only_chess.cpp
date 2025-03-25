@@ -82,14 +82,13 @@ void jugadas_aleatorias(){
     cout<< "Media de movimientos válidos: "<< sum/i << endl; 
 }
 
-
 void juego_manual(){
 
   while(true){
     juego.visualizar_tablero();
+    //juego.mostrar_estado();
     juego.movimientos = juego.movimientos_validos(jugador);
     juego.clavadas(jugador,juego.movimientos);
-     
     //juego.checar_enroque(jugador,juego.movimientos);
     juego.mostrar_movimientos(juego.movimientos);
     //juego.mostrar_estado();
@@ -101,20 +100,31 @@ void juego_manual(){
     cout << "Número de jugada: "<< i++ << endl;
     juego.movimientos.clear();
     jugador = -1*jugador;
-    /*
+    
    if (juego.checar_jaque(jugador)){
         juego.visualizar_tablero();
+        //juego.mostrar_estado();
         player  = jugador == -1 ? "Blanco" : "Negro";
         cout << "Jaque a rey "<< player << endl;
-        juego.movimientos_validos_jaque(jugador);
+        juego.movimientos_validos_jaque(jugador); 
+        //cout << "estado despues de jaque: "<< endl;
+        //juego.mostrar_estado();
         if (juego.moves_jaque.size() < 1){
             cout << "Jaque Mate."<< endl;
+            cout << "Gana " << -jugador << endl;
+            break;
         } else{
-           juego.mostrar_movimientos(juego.moves_jaque);  
+           //juego.clavadas(jugador,juego.moves_jaque);
+           juego.mostrar_movimientos(juego.moves_jaque);
+            cout <<"Turno de jugador: " << player << endl;
+            cout << "Elige tu movimiento: "; 
+            cin >> x;
+            juego.siguiente_estado(juego.moves_jaque[x]);
+            juego.moves_jaque.clear();
+            jugador = -1*jugador;
+            continue;
        }
-
-       break;
-    }*/
+    }
 
   }
 

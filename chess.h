@@ -33,9 +33,7 @@ public:
     int tablero[8][8][3];  // [fila][columna][color_casilla, color_pieza, tipo_pieza]
     int rey_blanco[2];
     int rey_negro[2];
-    //int rey[2];
-    //int piezas_que_clavan[5][2];
-    //bool jaque;
+    int jaqueadora[2];
     std::vector<Coordenadas> movimientos, movimientos2;
     std::vector<Coordenadas> moves_jaque;
     std::vector<int> piezas_clavadas;

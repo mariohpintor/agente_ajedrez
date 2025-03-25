@@ -482,26 +482,25 @@ void obtener_rey_openente(int jugador){
            }}
 
         cout << "#clavadas: "<< piezas_clavadas.size()/2<< endl;
-        //for (int i=0; i< piezas_clavadas.size()/2; i++){
-         //  cout << piezas_clavadas[i]<< "," << piezas_clavadas[i+1]<< endl;
-        //}
+        for(int i = 0; i < piezas_clavadas.size() ;i+=2){
+            cout <<piezas_clavadas[i]<<","<< piezas_clavadas[i+1]<< endl;
+        }
 
         if(piezas_clavadas.size()>0){
-            // quitar piezas clavadas de movimientos
+            // quitar piezas clavadas de movimientos, SOLO DEJAR AQUELLA QUE CAPTURA LA AMENAZA
             for (int j =  movimientos.size() -1; j > -1 ;j--){
-                for (int i=0; i < piezas_clavadas.size()/2;i++){
+                for (int i=0; i < piezas_clavadas.size();i+=2){
                    if(movimientos[j].x == piezas_clavadas[i] && movimientos[j].y == piezas_clavadas[i+1]){
-                    cout << piezas_clavadas[i]<< "," << piezas_clavadas[i+1]<< endl;
-                    //pos.push_back(j);
-                    movimientos.erase(movimientos.begin()+j);
+                      
+                      /*  */
+                      // movimientos[j].z == jaqueadora[0] && movimientos[j].w == jaqueadora[1]
+                      if(tablero[movimientos[j].z][movimientos[j].w][2] == 2 || tablero[movimientos[j].z][movimientos[j].w][2] == 4 ||
+                          tablero[movimientos[j].z][movimientos[j].w][2] == 5)
+                        {continue;}
+                     else{movimientos.erase(movimientos.begin()+j);}
                    } 
                 }
-                
             }
-            /*
-            for(int k= pos.size() - 1;k > -1 ; k--){
-              movimientos.erase(movimientos.begin()+pos[k]);
-            }*/
         }
 
      }
@@ -517,8 +516,10 @@ void obtener_rey_openente(int jugador){
       movimientos2 = movimientos_validos(-1*jugador);
       for (const auto& elemento : movimientos2) {
            //cout << elemento.z<< elemento.w << "rey: ["<< rey[0]<<","<< rey[1]<<"]"<<endl;
+           // PODEMOS OBTENER QUE PIEZA ESTA DANDO JAQUE
           if(elemento.z ==rey[0] && elemento.w == rey[1]){
-            
+            jaqueadora[0] = elemento.x;
+            jaqueadora[1] = elemento.y;
             return true;
           }
      }
@@ -536,18 +537,20 @@ void obtener_rey_openente(int jugador){
             accion_inversa.y = elemento.w;
             accion_inversa.z = elemento.x;
             accion_inversa.w = elemento.y;
-            if(tablero[elemento.z][elemento.w][2] != 0){
+            if(tablero[elemento.z][elemento.w][1] == -jugador){
                 pieza[0] = tablero[elemento.z][elemento.w][2];
                 pieza[1] = tablero[elemento.z][elemento.w][1];
-            }
-           siguiente_estado(elemento); // que pasa si captura una pieza enemiga?
+            }else
+               {pieza[0]=0;
+                pieza[1]=0;}
+           siguiente_estado(elemento); 
            if(!checar_jaque(jugador)){ 
                moves_jaque.push_back(elemento);
            } 
            siguiente_estado(accion_inversa);
            tablero[elemento.z][elemento.w][1] = pieza[1];
            tablero[elemento.z][elemento.w][2] = pieza[0];
-
+           
        }
    }
 
