@@ -459,6 +459,8 @@ void obtener_rey_openente(int jugador){
     // Afil , Torre y Reina son los que pueden clavar
     // en la trayectoria debe estar Amenaza Pieza Rey
     int color, pieza;
+    //vector<int> pos;
+    piezas_clavadas.clear();
     for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
               if (tablero[i][j][1] == jugador){
@@ -480,18 +482,26 @@ void obtener_rey_openente(int jugador){
            }}
 
         cout << "#clavadas: "<< piezas_clavadas.size()/2<< endl;
+        //for (int i=0; i< piezas_clavadas.size()/2; i++){
+         //  cout << piezas_clavadas[i]<< "," << piezas_clavadas[i+1]<< endl;
+        //}
 
         if(piezas_clavadas.size()>0){
             // quitar piezas clavadas de movimientos
-            for (int j =0; j < movimientos.size();j++){
-                for (int i=0; i < piezas_clavadas.size();i+=2){
-                   if(movimientos[j].y == i && movimientos[j].w == i+1){
+            for (int j =  movimientos.size() -1; j > -1 ;j--){
+                for (int i=0; i < piezas_clavadas.size()/2;i++){
+                   if(movimientos[j].x == piezas_clavadas[i] && movimientos[j].y == piezas_clavadas[i+1]){
+                    cout << piezas_clavadas[i]<< "," << piezas_clavadas[i+1]<< endl;
+                    //pos.push_back(j);
                     movimientos.erase(movimientos.begin()+j);
                    } 
                 }
                 
             }
-            piezas_clavadas.clear();
+            /*
+            for(int k= pos.size() - 1;k > -1 ; k--){
+              movimientos.erase(movimientos.begin()+pos[k]);
+            }*/
         }
 
      }

@@ -89,6 +89,7 @@ void juego_manual(){
     juego.visualizar_tablero();
     juego.movimientos = juego.movimientos_validos(jugador);
     juego.clavadas(jugador,juego.movimientos);
+     
     //juego.checar_enroque(jugador,juego.movimientos);
     juego.mostrar_movimientos(juego.movimientos);
     //juego.mostrar_estado();
