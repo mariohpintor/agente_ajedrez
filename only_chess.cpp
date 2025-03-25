@@ -15,6 +15,7 @@ string Mate_pastor[7] = {"E2-E4","E7-E5","D1-H5","B8-C6","F1-C4","G8-F6","H5-F7"
 string Caro_Kann[11] = {"E2-E4","C7-C6","D2-D4","D7-D5","B1-C3","D5-E4",
                          "C3-E4","B8-D7","D1-E2","G8-F6","E4-D6"};
 string partida_clavada[5] = {"D2-D4","C7-C5","E2-E4","D8-A5","C2-C3"};
+                            // 7,9,9,4,7
 
 void jugadas_aleatorias();
 
@@ -87,7 +88,7 @@ void juego_manual(){
   while(true){
     juego.visualizar_tablero();
     juego.movimientos = juego.movimientos_validos(jugador);
-    juego.clavadas(jugador,juego.movimientos); 
+    juego.clavadas(jugador,juego.movimientos);
     //juego.checar_enroque(jugador,juego.movimientos);
     juego.mostrar_movimientos(juego.movimientos);
     //juego.mostrar_estado();
@@ -98,18 +99,21 @@ void juego_manual(){
     juego.siguiente_estado(juego.movimientos[x]);
     cout << "Número de jugada: "<< i++ << endl;
     juego.movimientos.clear();
-    jugador = juego.obtener_oponente(jugador);
-    
+    jugador = -1*jugador;
+    /*
    if (juego.checar_jaque(jugador)){
+        juego.visualizar_tablero();
         player  = jugador == -1 ? "Blanco" : "Negro";
         cout << "Jaque a rey "<< player << endl;
         juego.movimientos_validos_jaque(jugador);
-        if (juego.checar_jaque_mate()){
-            cout << "Jaque Mate"<< endl;
+        if (juego.moves_jaque.size() < 1){
+            cout << "Jaque Mate."<< endl;
         } else{
-           juego.mostrar_movimientos(juego.moves_jaque);}
+           juego.mostrar_movimientos(juego.moves_jaque);  
+       }
 
-    }
+       break;
+    }*/
 
   }
 
@@ -132,12 +136,12 @@ void seguir_partida(){
       juego.visualizar_tablero();
       cout << "Número de jugada: "<< i << "| Jugador: "<<jugador<< endl;
       jugador = juego.obtener_oponente(jugador);
-      
+      /*
       if (i==tamanios[x]-2){
          cout << "moves de "<< jugador << endl;
          juego.movimientos = juego.movimientos_validos(jugador);
          juego.mostrar_movimientos(juego.movimientos);
-      }
+      }*/
     }
     //cout << jugador<<","<<juego.checar_jaque(jugador)<< endl;
     int rey[2];

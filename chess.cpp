@@ -479,13 +479,13 @@ void obtener_rey_openente(int jugador){
               }
            }}
 
-        cout << piezas_clavadas.size()<< endl;
+        cout << "#clavadas: "<< piezas_clavadas.size()/2<< endl;
 
         if(piezas_clavadas.size()>0){
             // quitar piezas clavadas de movimientos
             for (int j =0; j < movimientos.size();j++){
-                for (int i=0; i < piezas_clavadas.size();i++){
-                   if(movimientos[j].x == i && movimientos[j].y == i+1){
+                for (int i=0; i < piezas_clavadas.size();i+=2){
+                   if(movimientos[j].y == i && movimientos[j].w == i+1){
                     movimientos.erase(movimientos.begin()+j);
                    } 
                 }
