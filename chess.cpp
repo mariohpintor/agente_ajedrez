@@ -561,9 +561,10 @@ void obtener_rey_openente(int jugador){
     return false;
    }
    // obtener valor y terminar
-   int Chess::valor_terminar() {
-    if (checar_jaque_mate()){return 1;} // gano jugador
-    else{ return -1;} // perdio jugador
+   int Chess::valor_terminar(int jugador) {
+    if (checar_jaque_mate()){return 1;} // gano último jugador
+    else if(movimientos_validos(jugador).size() < 1){ return 0;} // ahogado
+    else {return 0;} // empate
     return 0;
    }
    // obtener oponente

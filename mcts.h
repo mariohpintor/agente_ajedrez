@@ -13,6 +13,7 @@ class MCTS{
     public:
       // Constructor
       MCTS(Chess& chessInstance, Nodo& nodoInstance);
+      int argumentos[2];
       // Métodos
       void busquedas();
 };

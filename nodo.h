@@ -9,10 +9,14 @@ private:
 
 public:
     // Constructor
-    Nodo(Chess& chessInstance,int args, int parent, Coordenadas accion,int jugador);  // Usando referencia
+    Nodo(Chess& chessInstance,int args, int parent, Coordenadas accion_tomada,int jugador);  // Usando referencia
 
     // Métodos
-    void estado_inicial(); // método provisional
+    bool completamente_expandido();
+
+    int seleccion();
+
+    float obtener_ucb();
 };
 
 

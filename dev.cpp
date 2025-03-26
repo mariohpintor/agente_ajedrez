@@ -3,7 +3,7 @@
 #include "nodo.h"
 #include <iostream>
 
-
+// COMO USAMOS LA CLASE NODO DENTRO DE LA CLASE MCTS PARA TENER VARIOS NODOS??
 int main(){
     Chess juego;
     Coordenadas accion = {0,0,0,0};

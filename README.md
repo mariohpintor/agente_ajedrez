@@ -64,3 +64,5 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 - Posible error cuando hay dos amenazas a pieza clavada
 - Si se mueven REY y TORRES y regresan a la posición de enroque no es distinguible
 - Simular partidas completas para ver si hay errores
+- Implementar ahogado
+
