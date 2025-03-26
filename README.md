@@ -62,5 +62,5 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 ## Cosas por corregir
 - Peon A2 bug
 - Posible error cuando hay dos amenazas a pieza clavada
-- Testear enroque
-- Notación de enroque
+- Si se mueven REY y TORRES y regresan a la posición de enroque no es distinguible
+- Simular partidas completas para ver si hay errores

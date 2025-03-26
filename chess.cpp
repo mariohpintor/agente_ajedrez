@@ -97,12 +97,9 @@ Chess::Chess() {
    void Chess::siguiente_estado(Coordenadas accion) {
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
-       /*
-       if (accion.x > 7){
-          if (accion.x == 8){enroque(1);} else {enroque(2);}
-       } else{*/
-
-        //guardar posición de reyes
+       
+       if (accion.x < 8){
+         //guardar posición de reyes
          if(tablero[accion.x][accion.y][2] == 6){
           if (tablero[accion.x][accion.y][1] == -1) {
             rey_blanco[0] = accion.z;
@@ -113,14 +110,14 @@ Chess::Chess() {
            }
          }
        
-       //if(accion.x <8 && accion.y <8 && accion.z <8 && accion.w <8 ){
+       
        tablero[accion.z][accion.w][1] = tablero[accion.x][accion.y][1]; // jugador
        tablero[accion.z][accion.w][2] = tablero[accion.x][accion.y][2]; // pieza
        tablero[accion.x][accion.y][1] = 0; // vaciar casilla antigua
        tablero[accion.x][accion.y][2] = 0;
-       //}
-       
-   }
+          
+       } else{ enroque(accion);}
+}
 
    int Chess::minimo(int a, int b) {
     if (a < b){return a;} else {return b;}
@@ -225,13 +222,9 @@ void obtener_rey_openente(int jugador){
        // regresar una lista de los movimientos dado el estado actual
        // ver cada pieza que puede moverse en el  tablero actual y ver a donde puede moverse
        // condiciones
-       /* 
-       int row;
-        if(jugador == -1){row = 7;}
-          else {row = 0;}
-       if (tablero[row][4][2] == 6){checar_enroque(jugador);}*/
-
        vector<Coordenadas> movimientos;
+
+       
        for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
               
@@ -303,59 +296,61 @@ void obtener_rey_openente(int jugador){
 
    void Chess::checar_enroque(int jugador,vector<Coordenadas>& movimientos){
      // esta funcion regresa el tipo de enroque disponible
-     //info_enroque = {8,1,2,0} primer num de diferenciacion, .y = 1 largo, .z = 2 corto, .w = jugador
-      info_enroque.x = 8;
-      info_enroque.w = jugador;
       int row;
-      row = jugador == -1 ? 7: 0;
+      row = jugador == -1 ?7:0;
+      info_enroque = 1;
+      movimientos2 = movimientos_validos(-jugador);
      // Verifiquemos las condiciones
      // hay espacio y las piezas estan en su lugar?
         if(tablero[row][4][2] == 6){
            // enroque largo
            if (tablero[row][0][2] == 4 && tablero[row][1][2]==0 && tablero[row][2][2]==0 && tablero[row][3][2]==0){
               for(int i=0; i< 5; i++){
-                  for ( Coordenadas move: movimientos){
-                    if(row==move.x && i== move.y){
-                    info_enroque.y = 1;
-                    movimientos.push_back({8,1,1,1}); // no compatible con notacion
+                  for ( Coordenadas move: movimientos2){
+                    if(row==move.z && i== move.w){
+                    info_enroque = 0;
                     break;
-                   }else {info_enroque.y= 0;}
-                }}
-            }
-          
+                   }
+             }}}else{info_enroque = 0;}
+
+            if(info_enroque){
+                cout << "Enroque largo"<<endl;
+                movimientos.push_back({8,jugador,0,0});}
+          info_enroque = 1;
           // enroque corto
           if (tablero[row][7][2] == 4 && tablero[row][5][2]==0 && tablero[row][6][2]==0){
             for(int i=5; i< 8; i++){
-                  for ( Coordenadas move: movimientos){
-                    if(row==move.x && i== move.y){
-                    info_enroque.z = 2;
-                    movimientos.push_back({9,2,2,2}); // no compatible con notacion
+                  for ( Coordenadas move: movimientos2){
+                    if(row==move.z && i== move.w){
+                    info_enroque = 0;
                     break;
-                   }else {info_enroque.y= 0;}
-                }}
-          }
+                   }
+                }}}else{info_enroque = 0;}
+         if(info_enroque){
+            cout << "Enroque corto"<<endl;
+            movimientos.push_back({9,jugador,0,0});}
        }
     }
 
-   void Chess::enroque(int tipo_enroque) { 
+   void Chess::enroque(Coordenadas accion) { 
      // intercambiar rey con torre
      // esta funcion ejecuta el tipo de enroque
       int row;
-      row = info_enroque.w == -1 ? 7: 0;
-         switch (tipo_enroque){
+      row = accion.y == -1 ? 7: 0;
+         switch (accion.x){
         // enroque largo
-          case 1:
+          case 8:
             tablero[row][2][2]= 6;
-            tablero[row][2][1]= info_enroque.w;
+            tablero[row][2][1]= accion.y;
             tablero[row][3][2]= 4;
-            tablero[row][3][1]= info_enroque.w;
+            tablero[row][3][1]= accion.y;
 
             tablero[row][4][2] = 0;
             tablero[row][4][1] = 0;
             tablero[row][0][1] = 0;
             tablero[row][0][2] = 0;
 
-            if (info_enroque.w == -1){
+            if (accion.y == -1){
                 rey_blanco[0] = row;
                 rey_blanco[1] = 2;
             }else{
@@ -365,18 +360,18 @@ void obtener_rey_openente(int jugador){
 
            break;
         // enroque corto
-          case 2:
+          case 9:
             tablero[row][6][2]= 6;
-            tablero[row][6][1]= info_enroque.w;
+            tablero[row][6][1]= accion.y;
             tablero[row][5][2]= 4;
-            tablero[row][5][1]= info_enroque.w;
+            tablero[row][5][1]= accion.y;
 
             tablero[row][4][1] = 0;
             tablero[row][4][2] = 0;
             tablero[row][7][1] = 0;
             tablero[row][7][2] = 0;
 
-            if (info_enroque.w == -1){
+            if (accion.y == -1){
                 rey_blanco[0] = row;
                 rey_blanco[1] = 6;
             }else{
@@ -391,16 +386,23 @@ void obtener_rey_openente(int jugador){
 
    std::string Chess::movimiento_a_notacion(Coordenadas accion){
        std::string notation;
+
+       if(accion.x < 8){
+
        notation = columnas[accion.y];
        notation+= to_string(8-accion.x);
        notation+="-";
        notation+= columnas[accion.w];
        notation += to_string(8-accion.z);
-       return notation;
+       return notation;}
+       else if(accion.x == 8){
+         return "O-O-O";
+       } else {
+         return "O-O";
+       }
    }
 
    Coordenadas Chess::notacion_a_movimiento(std::string move){
-       //E2-E4 (6,4,4,4)
        int i;
        Coordenadas accion;
        accion.x = 8 - (move[1] - '0');
@@ -518,8 +520,8 @@ void obtener_rey_openente(int jugador){
            //cout << elemento.z<< elemento.w << "rey: ["<< rey[0]<<","<< rey[1]<<"]"<<endl;
            // PODEMOS OBTENER QUE PIEZA ESTA DANDO JAQUE
           if(elemento.z ==rey[0] && elemento.w == rey[1]){
-            jaqueadora[0] = elemento.x;
-            jaqueadora[1] = elemento.y;
+            //jaqueadora[0] = elemento.x;
+            //jaqueadora[1] = elemento.y;
             return true;
           }
      }

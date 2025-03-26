@@ -15,7 +15,7 @@ string Mate_pastor[7] = {"E2-E4","E7-E5","D1-H5","B8-C6","F1-C4","G8-F6","H5-F7"
 string Caro_Kann[11] = {"E2-E4","C7-C6","D2-D4","D7-D5","B1-C3","D5-E4",
                          "C3-E4","B8-D7","D1-E2","G8-F6","E4-D6"};
 string partida_clavada[5] = {"D2-D4","C7-C5","E2-E4","D8-A5","C2-C3"};
-                            // 7,9,9,4,7
+                            
 
 void jugadas_aleatorias();
 
@@ -86,12 +86,11 @@ void juego_manual(){
 
   while(true){
     juego.visualizar_tablero();
-    //juego.mostrar_estado();
     juego.movimientos = juego.movimientos_validos(jugador);
     juego.clavadas(jugador,juego.movimientos);
-    //juego.checar_enroque(jugador,juego.movimientos);
+    juego.checar_enroque(jugador,juego.movimientos);
     juego.mostrar_movimientos(juego.movimientos);
-    //juego.mostrar_estado();
+
     player  = jugador == -1 ? "Blanco" : "Negro";
     cout <<"Turno de jugador: " << player << endl;
     cout << "Elige tu movimiento: "; 
@@ -103,18 +102,15 @@ void juego_manual(){
     
    if (juego.checar_jaque(jugador)){
         juego.visualizar_tablero();
-        //juego.mostrar_estado();
         player  = jugador == -1 ? "Blanco" : "Negro";
         cout << "Jaque a rey "<< player << endl;
         juego.movimientos_validos_jaque(jugador); 
-        //cout << "estado despues de jaque: "<< endl;
-        //juego.mostrar_estado();
+
         if (juego.moves_jaque.size() < 1){
             cout << "Jaque Mate."<< endl;
             cout << "Gana " << -jugador << endl;
             break;
         } else{
-           //juego.clavadas(jugador,juego.moves_jaque);
            juego.mostrar_movimientos(juego.moves_jaque);
             cout <<"Turno de jugador: " << player << endl;
             cout << "Elige tu movimiento: "; 

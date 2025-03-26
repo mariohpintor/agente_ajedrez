@@ -33,11 +33,11 @@ public:
     int tablero[8][8][3];  // [fila][columna][color_casilla, color_pieza, tipo_pieza]
     int rey_blanco[2];
     int rey_negro[2];
-    int jaqueadora[2];
+    //int jaqueadora[2];
     std::vector<Coordenadas> movimientos, movimientos2;
     std::vector<Coordenadas> moves_jaque;
     std::vector<int> piezas_clavadas;
-    Coordenadas info_enroque;
+    int info_enroque;
 
     void mostrarPiezas();
     void estado_inicial();
@@ -48,7 +48,7 @@ public:
     void rectas(int jugador,int i, int j,std::vector<Coordenadas>& movimientos);
     std::vector<Coordenadas>  movimientos_validos(int jugador);
     void checar_enroque(int jugador,std::vector<Coordenadas>& movimientos);
-    void enroque(int tipo_enroque);
+    void enroque(Coordenadas accion);
     std::string movimiento_a_notacion(Coordenadas accion);
     Coordenadas notacion_a_movimiento(std::string move);
     void mostrar_movimientos(std::vector<Coordenadas>& movimientos);
