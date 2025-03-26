@@ -62,21 +62,32 @@ void jugadas_aleatorias(){
       while(i<50){
       juego.visualizar_tablero(); 
       juego.movimientos = juego.movimientos_validos(jugador);
+      juego.clavadas(jugador,juego.movimientos);
+      juego.checar_enroque(jugador,juego.movimientos);
       sum+= juego.movimientos.size();
       cout << "Número de jugada: "<< i++ << endl;
       x = rand()% juego.movimientos.size();
       juego.siguiente_estado(juego.movimientos[x]);
       jugador = juego.obtener_oponente(jugador);
-       if (juego.checar_jaque(jugador)){
+
+    if (juego.checar_jaque(jugador)){
+        juego.visualizar_tablero();
         player  = jugador == -1 ? "Blanco" : "Negro";
         cout << "Jaque a rey "<< player << endl;
-        juego.movimientos_validos_jaque(jugador);
-        if (juego.checar_jaque_mate()){
-            cout << "Jaque Mate"<< endl;
-        } else{
-           juego.mostrar_movimientos(juego.moves_jaque);}
+        juego.movimientos_validos_jaque(jugador); 
 
+        if (juego.moves_jaque.size() < 1){
+            cout << "Jaque Mate."<< endl;
+            cout << "Gana " << -jugador << endl;
+            break;
+        } else{
+             x = rand()% juego.moves_jaque.size();
+            juego.siguiente_estado(juego.moves_jaque[x]);
+            juego.moves_jaque.clear();
+            jugador = -1*jugador;
+            continue;
        }
+    }
       
     }
     cout<< "Media de movimientos válidos: "<< sum/i << endl; 
@@ -132,8 +143,8 @@ void seguir_partida(){
     cout<< "Elige partida:"<<endl;
     cout<< "1. Gambito Englund"<<endl; // correct 
     cout << "2. Mate al pastor "<<endl; // correct
-    cout << "3. Mate en la defensa Caro-Kann"<<endl; // jaque con clavada
-    cout << "4. Ejemplo jaque simple"<<endl;
+    cout << "3. Mate en la defensa Caro-Kann"<<endl; // jaque mate con clavada
+    cout << "4. Ejemplo clavada simple"<<endl;
     cout<< "Opción: ";
     cin >> x;
     x--;
@@ -143,14 +154,8 @@ void seguir_partida(){
       juego.visualizar_tablero();
       cout << "Número de jugada: "<< i << "| Jugador: "<<jugador<< endl;
       jugador = juego.obtener_oponente(jugador);
-      /*
-      if (i==tamanios[x]-2){
-         cout << "moves de "<< jugador << endl;
-         juego.movimientos = juego.movimientos_validos(jugador);
-         juego.mostrar_movimientos(juego.movimientos);
-      }*/
     }
-    //cout << jugador<<","<<juego.checar_jaque(jugador)<< endl;
+    
     int rey[2];
       if(jugador == 1){
           rey[0] = juego.rey_negro[0];
@@ -172,7 +177,6 @@ void seguir_partida(){
     cout << "moves de "<< -jugador << endl;
     juego.movimientos = juego.movimientos_validos(-jugador);
     juego.mostrar_movimientos(juego.movimientos);
-    //juego.mostrar_movimientos(juego.movimientos2);
 
 }
 
