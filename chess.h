@@ -30,7 +30,7 @@ public:
     std::string figuras_negras[6];
     std::string piezas[7];
     std::string columnas;
-    int tablero[8][8][3];  // [fila][columna][color_casilla, color_pieza, tipo_pieza]
+    int tablero[8][8][2];  // [fila][columna][color_pieza, tipo_pieza]
     int rey_blanco[2];
     int rey_negro[2];
     //int jaqueadora[2];
@@ -42,6 +42,7 @@ public:
     void mostrarPiezas();
     void estado_inicial();
     void mostrar_estado();
+    void siguiente_estado_copy(Coordenadas accion, int tablero[][8][2]);
     void siguiente_estado(Coordenadas accion);
     int minimo(int a, int b);
     void diagonales(int jugador,int i, int j,std::vector<Coordenadas>& movimientos);

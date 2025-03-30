@@ -6,10 +6,14 @@
 class Nodo {
 private:
     Chess& chess;  // Referencia a Chess
+    Nodo* padre;          // Puntero al nodo padre (nullptr si es raíz)
+    std::vector<Nodo*> hijos;  // Hijos del nodo
 
 public:
     // Constructor
-    Nodo(Chess& chessInstance,int args, int parent, Coordenadas accion_tomada,int jugador);  // Usando referencia
+    Nodo(Chess& chessInstance, Nodo* padre = nullptr,
+         float constante,Coordenadas accion_tomada,
+         int jugador,int& estado[8][8][3]);  // Usando referencia
 
     // Métodos
     bool completamente_expandido();
@@ -17,6 +21,12 @@ public:
     int seleccion();
 
     float obtener_ucb();
+
+    Nodo* expandir();
+
+    int simulacion();
+
+    void retropropagacion(int valor);
 };
 
 

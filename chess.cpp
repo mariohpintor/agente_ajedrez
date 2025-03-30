@@ -33,75 +33,66 @@ Chess::Chess() {
   void Chess::estado_inicial() {
      for (int i = 0; i < 8; i++){
        for (int j = 0; j< 8; j++){
-           // color de casillas
-           if (i%2 == 0){ 
-               if(j%2 == 0){ tablero[i][j][0]= -1;} // -1 casilla blanca
-               else{tablero[i][j][0]= 1;}// 1 casilla negra
-              }
-           else{ 
-               if((j+1)%2 == 0){ tablero[i][j][0]= -1;} 
-               else{tablero[i][j][0]= 1;}
-              } 
+
            // color de piezas y peones
            if(i == 1 || i == 0){
-               tablero[i][j][1] = 1; // piezas negras
-               tablero[i][j][2] = 1;}
+               tablero[i][j][0] = 1; // piezas negras
+               tablero[i][j][1] = 1;} // peones
            else if(i == 6 || i == 7){
-               tablero[i][j][1] = -1; // piezas blancas
-               tablero[i][j][2] = 1;}
+               tablero[i][j][0] = -1; // piezas blancas
+               tablero[i][j][1] = 1;} // peones
             else{
-                tablero[i][j][1] = 0;
-                tablero[i][j][2] = 0;}
+                tablero[i][j][0] = 0;  // celdas vacias
+                tablero[i][j][1] = 0;}
             
           // tipo de piezas
           // torres
-          tablero[0][0][2] = 4;
-          tablero[0][7][2] = 4;
-          tablero[7][0][2] = 4;
-          tablero[7][7][2] = 4;
+          tablero[0][0][1] = 4;
+          tablero[0][7][1] = 4;
+          tablero[7][0][1] = 4;
+          tablero[7][7][1] = 4;
           // caballos
-          tablero[0][1][2] = 3;
-          tablero[0][6][2] = 3;
-          tablero[7][1][2] = 3;
-          tablero[7][6][2] = 3;
+          tablero[0][1][1] = 3;
+          tablero[0][6][1] = 3;
+          tablero[7][1][1] = 3;
+          tablero[7][6][1] = 3;
           // alfiles
-          tablero[0][2][2] = 2;
-          tablero[0][5][2] = 2;
-          tablero[7][2][2] = 2;
-          tablero[7][5][2] = 2;
+          tablero[0][2][1] = 2;
+          tablero[0][5][1] = 2;
+          tablero[7][2][1] = 2;
+          tablero[7][5][1] = 2;
           // reinas
-          tablero[0][3][2] = 5;
-          tablero[7][3][2] = 5;
+          tablero[0][3][1] = 5;
+          tablero[7][3][1] = 5;
           //reyes
-          tablero[0][4][2] = 6;
-          tablero[7][4][2] = 6;
+          tablero[0][4][1] = 6;
+          tablero[7][4][1] = 6;
           rey_blanco[0]= 7;
           rey_blanco[1] = 4;
           rey_negro[0]= 0;
           rey_negro[1] = 4;
-            //cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] <<","<< tablero[i][j][2] << "]"<<" ";
        }
-        //cout << endl;
      }
   }
 
   void Chess::mostrar_estado() {
       for (int i = 0; i < 8; i++){
        for (int j = 0; j< 8; j++){
-            cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] <<","<< tablero[i][j][2] << "]"<<" ";
+            cout <<"[" <<tablero[i][j][0] << ","<< tablero[i][j][1] << "]"<<" ";
        }
         cout << endl;
      }
   }
-   // obtener siguiente estado
-   void Chess::siguiente_estado(Coordenadas accion) {
+
+   // obtener siguiente estado por valor
+   void Chess::siguiente_estado_copy(Coordenadas accion, int tablero[][8][2]) {
        // una pieza cambia su posición
        // accion = [x_inicio,y_inicio,x_destino,y_destino]
        
        if (accion.x < 8){
          //guardar posición de reyes
-         if(tablero[accion.x][accion.y][2] == 6){
-          if (tablero[accion.x][accion.y][1] == -1) {
+         if(tablero[accion.x][accion.y][1] == 6){
+          if (tablero[accion.x][accion.y][0] == -1) {
             rey_blanco[0] = accion.z;
             rey_blanco[1] = accion.w;
            } else {
@@ -111,13 +102,40 @@ Chess::Chess() {
          }
        
        
-       tablero[accion.z][accion.w][1] = tablero[accion.x][accion.y][1]; // jugador
-       tablero[accion.z][accion.w][2] = tablero[accion.x][accion.y][2]; // pieza
-       tablero[accion.x][accion.y][1] = 0; // vaciar casilla antigua
-       tablero[accion.x][accion.y][2] = 0;
+       tablero[accion.z][accion.w][0] = tablero[accion.x][accion.y][0]; // jugador
+       tablero[accion.z][accion.w][1] = tablero[accion.x][accion.y][1]; // pieza
+       tablero[accion.x][accion.y][0] = 0; // vaciar casilla antigua
+       tablero[accion.x][accion.y][1] = 0;
           
        } else{ enroque(accion);}
-}
+
+   }
+
+   // obtener siguiente estado por referencia
+   void Chess::siguiente_estado(Coordenadas accion) {
+       // una pieza cambia su posición
+       // accion = [x_inicio,y_inicio,x_destino,y_destino]
+       
+       if (accion.x < 8){
+         //guardar posición de reyes
+         if(tablero[accion.x][accion.y][1] == 6){
+          if (tablero[accion.x][accion.y][0] == -1) {
+            rey_blanco[0] = accion.z;
+            rey_blanco[1] = accion.w;
+           } else {
+            rey_negro[0] = accion.z;
+            rey_negro[1] = accion.w;
+           }
+         }
+       
+       
+       tablero[accion.z][accion.w][0] = tablero[accion.x][accion.y][0]; // jugador
+       tablero[accion.z][accion.w][1] = tablero[accion.x][accion.y][1]; // pieza
+       tablero[accion.x][accion.y][0] = 0; // vaciar casilla antigua
+       tablero[accion.x][accion.y][1] = 0;
+          
+       } else{ enroque(accion);}
+   }
 
    int Chess::minimo(int a, int b) {
     if (a < b){return a;} else {return b;}
@@ -126,18 +144,18 @@ Chess::Chess() {
    void Chess::diagonales(int jugador,int i, int j,std::vector<Coordenadas>& movimientos){
      // derecha arriba
    for (int k = 1; k <= minimo(7-j,i);k++){
-     if( tablero[i-k][j+k][1] == 0){
+     if( tablero[i-k][j+k][0] == 0){
         movimientos.push_back({i,j,i-k,j+k});
-     } else if(tablero[i-k][j+k][1] == -jugador) {
+     } else if(tablero[i-k][j+k][0] == -jugador) {
          movimientos.push_back({i,j,i-k,j+k});
          break;
      }
      else{break;}}
    // izquierda arriba
    for (int k = 1; k <= minimo(j,i);k++){
-       if(tablero[i-k][j-k][1] == 0){
+       if(tablero[i-k][j-k][0] == 0){
        movimientos.push_back({i,j,i-k,j-k});
-       } else if (tablero[i-k][j-k][1] == -jugador) 
+       } else if (tablero[i-k][j-k][0] == -jugador) 
           {
            movimientos.push_back({i,j,i-k,j-k});
            break;
@@ -146,18 +164,18 @@ Chess::Chess() {
     }
    // izquierda abajo 
    for (int k = 1; k <= minimo(j,7-i);k++){
-     if(tablero[i+k][j-k][1] == 0 ){
+     if(tablero[i+k][j-k][0] == 0 ){
         movimientos.push_back({i,j,i+k,j-k});
-     } else if(tablero[i+k][j-k][1] == -jugador){
+     } else if(tablero[i+k][j-k][0] == -jugador){
         movimientos.push_back({i,j,i+k,j-k});
         break;
      } else
      {break;}}
    // derecha abajo
    for (int k = 1; k <= minimo(7-j,7-i);k++){
-     if(tablero[i+k][j+k][1]==0){
+     if(tablero[i+k][j+k][0]==0){
         movimientos.push_back({i,j,i+k,j+k});
-     } else if(tablero[i+k][j+k][1]==-jugador){
+     } else if(tablero[i+k][j+k][0]==-jugador){
          movimientos.push_back({i,j,i+k,j+k});
          break;
      } else
@@ -168,9 +186,9 @@ Chess::Chess() {
     void Chess::rectas(int jugador,int i, int j,std::vector<Coordenadas>& movimientos){
    // arriba
    for(int k=1; k <= i;k++){
-      if(tablero[i-k][j][1] == 0 ){
+      if(tablero[i-k][j][0] == 0 ){
         movimientos.push_back({i,j,i-k,j});
-      }else if(tablero[i-k][j][1] == -jugador){
+      }else if(tablero[i-k][j][0] == -jugador){
         movimientos.push_back({i,j,i-k,j});
         break;
     } else
@@ -178,27 +196,27 @@ Chess::Chess() {
    }
    // derecha
    for(int k=1; k <= 7-j;k++){
-      if(tablero[i][j+k][1] == 0 ){
+      if(tablero[i][j+k][0] == 0 ){
         movimientos.push_back({i,j,i,j+k});
-      }else if(tablero[i][j+k][1] == -jugador){
+      }else if(tablero[i][j+k][0] == -jugador){
         movimientos.push_back({i,j,i,j+k});
         break;
     } else {break;}
    } 
    // izquierda
    for(int k=1; k <=j;k++){
-      if(tablero[i][j-k][1] == 0 ){
+      if(tablero[i][j-k][0] == 0 ){
         movimientos.push_back({i,j,i,j-k});
-      }else if(tablero[i][j-k][1] == -jugador){
+      }else if(tablero[i][j-k][0] == -jugador){
         movimientos.push_back({i,j,i,j-k});
         break;
       }else{break;}
    } 
    // abajo
    for(int k=1; k <=7-i;k++){
-      if(tablero[i+k][j][1]==0){
+      if(tablero[i+k][j][0]==0){
         movimientos.push_back({i,j,i+k,j});
-      }else if(tablero[i+k][j][1]==-jugador){
+      }else if(tablero[i+k][j][0]==-jugador){
         movimientos.push_back({i,j,i+k,j});
         break;
     }else 
@@ -206,16 +224,7 @@ Chess::Chess() {
   }
    
 }
-/*
-void obtener_rey_openente(int jugador){
-    if (jugador == -1){
-        rey[0] = rey_negro[0];
-        rey[1] = rey_negro[1];
-    }else{
-        rey[0] = rey_blanco[0];
-        rey[1] = rey_blanco[1];
-    }
-}*/
+
 
    // obtener movimientos validos
    std::vector<Coordenadas>  Chess::movimientos_validos(int jugador) {
@@ -228,27 +237,27 @@ void obtener_rey_openente(int jugador){
        for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
               
-               if (tablero[i][j][1] == jugador){
-                   switch(tablero[i][j][2]) {
+               if (tablero[i][j][0] == jugador){
+                   switch(tablero[i][j][1]) {
                     case 1:
                       // peon 
                       // Son los únicos que solo pueden hacia enfrente
                       if (jugador == -1){ // caso blanco
-                           if(tablero[i-1][j][2]==0){
+                           if(tablero[i-1][j][0]==0){
                            movimientos.push_back({i,j,i-1,j});}//j = j-1
                            //primer movimiento peon
-                           if (i == 6 && tablero[i-2][j][2]==0){movimientos.push_back({i,j,i-2,j});}
+                           if (i == 6 && tablero[i-2][j][1]==0){movimientos.push_back({i,j,i-2,j});}
                            // captura
                            if (tablero[i-1][j-1][1]==1){movimientos.push_back({i,j,i-1,j-1});}
                            if (tablero[i-1][j+1][1]==1){movimientos.push_back({i,j,i-1,j+1});}
                         } else{// caso negro
-                            if(tablero[i+1][j][2]==0){
+                            if(tablero[i+1][j][1]==0){
                             movimientos.push_back({i,j,i+1,j});}//j = j-1
                             //primer movimiento peon
-                            if (i == 1 && tablero[i+2][j][2]==0){movimientos.push_back({i,j,i+2,j});}
+                            if (i == 1 && tablero[i+2][j][1]==0){movimientos.push_back({i,j,i+2,j});}
                             // captura
-                            if (tablero[i+1][j+1][1]==-1){movimientos.push_back({i,j,i+1,j+1});}
-                            if (tablero[i+1][j-1][1]==-1){movimientos.push_back({i,j,i+1,j-1});}
+                            if (tablero[i+1][j+1][0]==-1){movimientos.push_back({i,j,i+1,j+1});}
+                            if (tablero[i+1][j-1][0]==-1){movimientos.push_back({i,j,i+1,j-1});}
                         }
                       continue;
                     case 2:
@@ -260,7 +269,7 @@ void obtener_rey_openente(int jugador){
                        // caballo
                        int saltos[8][2] = {{i-2,j+1},{i-2,j-1},{i+2,j-1},{i+2,j+1},{i-1,j+2},{i-1,j-2},{i+1,j+2},{i+1,j-2}};
                        for (int k = 0; k < 8;k++){
-                         if (-1 < saltos[k][0] && saltos[k][0]< 8 && -1 < saltos[k][1] && saltos[k][1]< 8 && tablero[saltos[k][0]][saltos[k][1]][1]!=jugador)
+                         if (-1 < saltos[k][0] && saltos[k][0]< 8 && -1 < saltos[k][1] && saltos[k][1]< 8 && tablero[saltos[k][0]][saltos[k][1]][0]!=jugador)
                          { 
                            movimientos.push_back({i,j,saltos[k][0],saltos[k][1]});}
                        }}
@@ -281,7 +290,7 @@ void obtener_rey_openente(int jugador){
                      int pasos[8][2] = {{i-1,j},{i-1,j+1},{i,j-1},{i+1,j+1}
                                        ,{i+1,j},{i+1,j-1},{i,j+1},{i-1,j-1}};
                      for (int k=0; k<8 ;k++){
-                         if(-1< pasos[k][0] && pasos[k][0]<8 && -1< pasos[k][1] && pasos[k][1]<8 && tablero[pasos[k][0]][pasos[k][1]][1]!=jugador)
+                         if(-1< pasos[k][0] && pasos[k][0]<8 && -1< pasos[k][1] && pasos[k][1]<8 && tablero[pasos[k][0]][pasos[k][1]][0]!=jugador)
                          {movimientos.push_back({i,j,pasos[k][0],pasos[k][1]});}
                      }
   
@@ -302,9 +311,9 @@ void obtener_rey_openente(int jugador){
       movimientos2 = movimientos_validos(-jugador);
      // Verifiquemos las condiciones
      // hay espacio y las piezas estan en su lugar?
-        if(tablero[row][4][2] == 6){
+        if(tablero[row][4][1] == 6){
            // enroque largo
-           if (tablero[row][0][2] == 4 && tablero[row][1][2]==0 && tablero[row][2][2]==0 && tablero[row][3][2]==0){
+           if (tablero[row][0][1] == 4 && tablero[row][1][1]==0 && tablero[row][2][1]==0 && tablero[row][3][1]==0){
               for(int i=0; i< 5; i++){
                   for ( Coordenadas move: movimientos2){
                     if(row==move.z && i== move.w){
@@ -318,7 +327,7 @@ void obtener_rey_openente(int jugador){
                 movimientos.push_back({8,jugador,0,0});}
           info_enroque = 1;
           // enroque corto
-          if (tablero[row][7][2] == 4 && tablero[row][5][2]==0 && tablero[row][6][2]==0){
+          if (tablero[row][7][1] == 4 && tablero[row][5][1]==0 && tablero[row][6][1]==0){
             for(int i=5; i< 8; i++){
                   for ( Coordenadas move: movimientos2){
                     if(row==move.z && i== move.w){
@@ -340,15 +349,15 @@ void obtener_rey_openente(int jugador){
          switch (accion.x){
         // enroque largo
           case 8:
-            tablero[row][2][2]= 6;
-            tablero[row][2][1]= accion.y;
-            tablero[row][3][2]= 4;
-            tablero[row][3][1]= accion.y;
+            tablero[row][2][1]= 6;
+            tablero[row][2][0]= accion.y;
+            tablero[row][3][1]= 4;
+            tablero[row][3][0]= accion.y;
 
-            tablero[row][4][2] = 0;
             tablero[row][4][1] = 0;
+            tablero[row][4][0] = 0;
+            tablero[row][0][0] = 0;
             tablero[row][0][1] = 0;
-            tablero[row][0][2] = 0;
 
             if (accion.y == -1){
                 rey_blanco[0] = row;
@@ -361,15 +370,15 @@ void obtener_rey_openente(int jugador){
            break;
         // enroque corto
           case 9:
-            tablero[row][6][2]= 6;
-            tablero[row][6][1]= accion.y;
-            tablero[row][5][2]= 4;
-            tablero[row][5][1]= accion.y;
+            tablero[row][6][1]= 6;
+            tablero[row][6][0]= accion.y;
+            tablero[row][5][1]= 4;
+            tablero[row][5][0]= accion.y;
 
+            tablero[row][4][0] = 0;
             tablero[row][4][1] = 0;
-            tablero[row][4][2] = 0;
+            tablero[row][7][0] = 0;
             tablero[row][7][1] = 0;
-            tablero[row][7][2] = 0;
 
             if (accion.y == -1){
                 rey_blanco[0] = row;
@@ -441,13 +450,22 @@ void obtener_rey_openente(int jugador){
     string COLOR_CELDA;
     for (int i = 0; i < 8; i++){
        for (int j = 0; j< 8; j++){
+          // color de casillas
+           if (i%2 == 0){ 
+               if(j%2 == 0){ COLOR_CELDA = AZUL_CLARO;} // -1 casilla blanca
+               else{COLOR_CELDA = AZUL_OSCURO;}// 1 casilla negra
+              }
+           else{ 
+               if((j+1)%2 == 0){ COLOR_CELDA = AZUL_CLARO;} 
+               else{COLOR_CELDA = AZUL_OSCURO;}
+              } 
 
-           COLOR_PIEZA = tablero[i][j][1]==-1 ? TEXTO_BLANCO: TEXTO_NEGRO;
-           COLOR_CELDA = tablero[i][j][0]==-1 ? AZUL_CLARO : AZUL_OSCURO;
-           if (tablero[i][j][2] == 0 ){
+           COLOR_PIEZA = tablero[i][j][0]==-1 ? TEXTO_BLANCO: TEXTO_NEGRO;
+
+           if (tablero[i][j][1] == 0 ){
                cout << COLOR_CELDA <<" "<<" "<<" " << RESET;
            }else {
-            cout << COLOR_CELDA << COLOR_PIEZA << " "<< figuras_negras[tablero[i][j][2]-1] << " "<< RESET;
+            cout << COLOR_CELDA << COLOR_PIEZA << " "<< figuras_negras[tablero[i][j][1]-1] << " "<< RESET;
            }
          } 
          cout << endl;  
@@ -465,28 +483,28 @@ void obtener_rey_openente(int jugador){
     piezas_clavadas.clear();
     for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
-              if (tablero[i][j][1] == jugador){
+              if (tablero[i][j][0] == jugador){
                     /*Podemos quitar la pieza victima del jugador del tablero con*/
                   
-                  color = tablero[i][j][1];
-                  pieza = tablero[i][j][2];
+                  color = tablero[i][j][0];
+                  pieza = tablero[i][j][1];
+                  tablero[i][j][0] = 0;
                   tablero[i][j][1] = 0;
-                  tablero[i][j][2] = 0;
                   // y ver si existe jaque
                   if(checar_jaque(jugador)){
                     piezas_clavadas.push_back(i);
                     piezas_clavadas.push_back(j);
                   }
                   // regresar pieza
-                  tablero[i][j][1] = color;
-                  tablero[i][j][2] = pieza;
+                  tablero[i][j][0] = color;
+                  tablero[i][j][1] = pieza;
               }
            }}
 
         cout << "#clavadas: "<< piezas_clavadas.size()/2<< endl;
-        for(int i = 0; i < piezas_clavadas.size() ;i+=2){
+        /*for(int i = 0; i < piezas_clavadas.size() ;i+=2){
             cout <<piezas_clavadas[i]<<","<< piezas_clavadas[i+1]<< endl;
-        }
+        }*/
 
         if(piezas_clavadas.size()>0){
             // quitar piezas clavadas de movimientos, SOLO DEJAR AQUELLA QUE CAPTURA LA AMENAZA
@@ -496,8 +514,8 @@ void obtener_rey_openente(int jugador){
                       
                       /*  */
                       // movimientos[j].z == jaqueadora[0] && movimientos[j].w == jaqueadora[1]
-                      if(tablero[movimientos[j].z][movimientos[j].w][2] == 2 || tablero[movimientos[j].z][movimientos[j].w][2] == 4 ||
-                          tablero[movimientos[j].z][movimientos[j].w][2] == 5)
+                      if(tablero[movimientos[j].z][movimientos[j].w][1] == 2 || tablero[movimientos[j].z][movimientos[j].w][1] == 4 ||
+                          tablero[movimientos[j].z][movimientos[j].w][1] == 5)
                         {continue;}
                      else{movimientos.erase(movimientos.begin()+j);}
                    } 
@@ -539,9 +557,9 @@ void obtener_rey_openente(int jugador){
             accion_inversa.y = elemento.w;
             accion_inversa.z = elemento.x;
             accion_inversa.w = elemento.y;
-            if(tablero[elemento.z][elemento.w][1] == -jugador){
-                pieza[0] = tablero[elemento.z][elemento.w][2];
-                pieza[1] = tablero[elemento.z][elemento.w][1];
+            if(tablero[elemento.z][elemento.w][0] == -jugador){
+                pieza[0] = tablero[elemento.z][elemento.w][1];
+                pieza[1] = tablero[elemento.z][elemento.w][0];
             }else
                {pieza[0]=0;
                 pieza[1]=0;}
@@ -550,8 +568,8 @@ void obtener_rey_openente(int jugador){
                moves_jaque.push_back(elemento);
            } 
            siguiente_estado(accion_inversa);
-           tablero[elemento.z][elemento.w][1] = pieza[1];
-           tablero[elemento.z][elemento.w][2] = pieza[0];
+           tablero[elemento.z][elemento.w][0] = pieza[1];
+           tablero[elemento.z][elemento.w][1] = pieza[0];
            
        }
    }
