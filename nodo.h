@@ -4,20 +4,27 @@
 #include "chess.h"  // Incluir la clase Chess
 
 class Nodo {
-private:
-    Chess& chess;  // Referencia a Chess
-    Nodo* padre;          // Puntero al nodo padre (nullptr si es raíz)
-    std::vector<Nodo*> hijos;  // Hijos del nodo
-
-public:
-    // Constructor
-    Nodo(Chess& chessInstance, Nodo* padre = nullptr,
-         float constante,Coordenadas accion_tomada,
-         int jugador,int& estado[][8][2]);  // Usando referencia
-     int jugador;
-     int visit_count = 0;
-     int value_sum = 0; 
+//private:
+  //  Chess& chess;  // Referencia a Chess
+    public:
+     Chess& chess;
+     Nodo* padre;          // Puntero al nodo padre (nullptr si es raíz)
+     int visit_count;
+     int value_sum; 
      std::vector<Coordenadas> movimientos_expandibles;
+     std::vector<Nodo*> hijos;  // Hijos del nodo
+     float constante;
+     Coordenadas accion_tomada; 
+     int jugador;
+     int tablero[8][8][2];
+
+
+    // Constructor
+    Nodo(Chess& chessInstance,
+         float x,Coordenadas y,
+         int z,int estado[][8][2],Nodo* parent = nullptr);  // Usando referencia
+
+
 
     // Métodos
     bool completamente_expandido();

@@ -4,20 +4,28 @@
 #include <cmath>
 
     // Constructor que recibe una referencia a Chess
-    Nodo::Nodo(Chess& chessInstance, Nodo* padre = nullptr, float constante,
-               ,Coordenadas accion_tomada,int jugador, 
-               int& estado[][8][2]): chess(chessInstance) {
+    Nodo::Nodo(Chess& chessInstance,
+               float x,Coordenadas y,
+              int z, int estado[][8][2], Nodo* parent): chess(chessInstance) {
 
-        // Inicializar el nodo con la instancia de Chess
-       int jugador = jugador;
-       int visit_count = 0;
-       int value_sum = 0; 
-       std::vector<Coordenadas> movimientos_expandibles = chess.movimientos_validos(jugador);
+       visit_count = 0;
+       value_sum = 0; 
+       constante = x;
+       accion_tomada = y; 
+       jugador = z;
+       movimientos_expandibles = chess.movimientos_validos(jugador);
+       padre = parent;
+       for (int i=0;i <8; i++){
+         for (int j= 0; j < 8 ; j++){
+            tablero[i][j][0] = estado[i][j][0]; 
+            tablero[i][j][1] = estado[i][j][1]; 
+         }
+       }
     }
 
     // Métodos 
     bool Nodo::completamente_expandido(){
-        return chess.movimientos_validos(jugador)< 0 && hijos.size() > 0;
+        return chess.movimientos_validos(jugador).size() < 1 && hijos.size() > 0;
     }
 
     int Nodo::seleccion(){
@@ -25,7 +33,8 @@
         float mejor_ucb = -100000;
 
         for(int i; i < hijos.size(); i++){
-            float ucb = obtener_ucb(hijos[i]);
+            Nodo* hijo = hijos.at(i);
+            float ucb = obtener_ucb(*hijo);
             if( ucb > mejor_ucb){
                 mejor_hijo = i;
                 mejor_ucb = ucb;
@@ -44,14 +53,14 @@
           int index_accion = rand()% movimientos_expandibles.size();
 
           // obtener el estado dada la acción aleatoria
-          int estado_hijo[8][8][2] = estado; // estado del padre
+          //int estado_hijo[8][8][2] =  tablero; // estado del padre
           // hacer la funcion siguiente_estado por valor
-          siguiente_estado_copy(movimientos_expandibles[index_accion], estado_hijo);
+          chess.siguiente_estado_copy(movimientos_expandibles[index_accion], tablero);
           
           // Crear el nodo hijo con el nuevo estado
-          hijo = Nodo(chess, this, constante,
+          Nodo hijo(chess, this, constante,
                       movimientos_expandibles[index_accion],-jugador, 
-                      estado_hijo);
+                       tablero);
           // quitar la accion tomada de los movimientos disponibles
           movimientos_expandibles.erase(movimientos_expandibles.begin() + index_accion);
 
@@ -61,7 +70,7 @@
    }
 
     int Nodo::simulacion(){
-        int valor = chess.valor_terminal(jugador);
+        int valor = chess.valor_terminar(jugador);
     }
 
     void Nodo::retropropagacion(int valor){}

@@ -10,7 +10,7 @@ int main(){
     Chess juego;
     juego.estado_inicial();
     Coordenadas accion = {6,4,4,4};
-    Nodo nodo(juego,nullptr,C, accion,-1,juego.tablero);
+    Nodo mi_nodo(juego,nullptr,C, accion,-1,juego.tablero);
 
     //MCTS MCTS(juego, nodo);  // Crear una instancia de MCTS y pasarle Chess y Nodo
 
