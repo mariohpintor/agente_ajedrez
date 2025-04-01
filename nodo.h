@@ -13,14 +13,18 @@ public:
     // Constructor
     Nodo(Chess& chessInstance, Nodo* padre = nullptr,
          float constante,Coordenadas accion_tomada,
-         int jugador,int& estado[8][8][3]);  // Usando referencia
+         int jugador,int& estado[][8][2]);  // Usando referencia
+     int jugador;
+     int visit_count = 0;
+     int value_sum = 0; 
+     std::vector<Coordenadas> movimientos_expandibles;
 
     // Métodos
     bool completamente_expandido();
 
     int seleccion();
 
-    float obtener_ucb();
+     float obtener_ucb(Nodo hijo);
 
     Nodo* expandir();
 

@@ -6,9 +6,10 @@
     // Constructor que recibe una referencia a Chess
     Nodo::Nodo(Chess& chessInstance, Nodo* padre = nullptr, float constante,
                ,Coordenadas accion_tomada,int jugador, 
-               int estado[8][8][2]): chess(chessInstance) {
+               int& estado[][8][2]): chess(chessInstance) {
 
         // Inicializar el nodo con la instancia de Chess
+       int jugador = jugador;
        int visit_count = 0;
        int value_sum = 0; 
        std::vector<Coordenadas> movimientos_expandibles = chess.movimientos_validos(jugador);
@@ -59,7 +60,9 @@
           return hijos.back().get();
    }
 
-    int Nodo::simulacion(){}
+    int Nodo::simulacion(){
+        int valor = chess.valor_terminal(jugador);
+    }
 
     void Nodo::retropropagacion(int valor){}
 
