@@ -41,6 +41,7 @@ public:
 
     void mostrarPiezas();
     void estado_inicial();
+    void estado_arbitrario(int estado_arb[][8][2]);
     void mostrar_estado();
     void siguiente_estado_copy(Coordenadas accion, int tablero[][8][2]);
     void siguiente_estado(Coordenadas accion);

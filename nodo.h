@@ -12,12 +12,12 @@ class Nodo {
      int visit_count;
      int value_sum; 
      std::vector<Coordenadas> movimientos_expandibles;
-     std::vector<Nodo*> hijos;  // Hijos del nodo
+     std::vector<Nodo> hijos;  // Gestión automática de memoria
      float constante;
      Coordenadas accion_tomada; 
      int jugador;
      int tablero[8][8][2];
-
+     //Chess juego_rollout;
 
     // Constructor
     Nodo(Chess& chessInstance,
@@ -27,13 +27,16 @@ class Nodo {
 
 
     // Métodos
+
+    void copiar_tablero(int estado1[][8][2], int estado2[][8][2]);
+
     bool completamente_expandido();
 
     int seleccion();
 
      float obtener_ucb(Nodo hijo);
 
-    Nodo* expandir();
+    void expandir(std::vector<Nodo>& hijos);
 
     int simulacion();
 

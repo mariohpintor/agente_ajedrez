@@ -75,6 +75,15 @@ Chess::Chess() {
      }
   }
 
+  void Chess::estado_arbitrario(int estado_arb[][8][2]){
+       for (int i=0;i <8; i++){
+          for (int j= 0; j < 8 ; j++){
+            tablero[i][j][0] = estado_arb[i][j][0]; 
+            tablero[i][j][1] = estado_arb[i][j][1]; 
+         }
+       }
+  }
+
   void Chess::mostrar_estado() {
       for (int i = 0; i < 8; i++){
        for (int j = 0; j< 8; j++){
