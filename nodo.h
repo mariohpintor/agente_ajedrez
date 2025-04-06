@@ -21,8 +21,7 @@ class Nodo {
 
     // Constructor
     Nodo(Chess& chessInstance,
-         float x,Coordenadas y,
-         int z,int estado[][8][2],Nodo* parent = nullptr);  // Usando referencia
+         float x,int z,int estado[][8][2],Coordenadas y = {0,0,0,0},Nodo* parent = nullptr);  // Usando referencia
 
 
 

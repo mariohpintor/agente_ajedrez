@@ -8,14 +8,15 @@
 class MCTS{
     private:
     Chess& chess;  // Referencia a Chess
-    Nodo& nodo;    // Referencia a Nodo
 
     public:
       // Constructor
-      MCTS(Chess& chessInstance, Nodo& nodoInstance);
-      int argumentos[2];
+      float constante;
+      int num_busquedas;
+
+      MCTS(Chess& chessInstance, float c,int searches)
       // Métodos
-      void busquedas();
+      std::vector<float> busquedas(int estado[][8][2]);
 };
 
 #endif  // Fin de la guardia de inclusión

@@ -2,12 +2,11 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <memory>
+//#include <memory>
 
     // Constructor que recibe una referencia a Chess
     Nodo::Nodo(Chess& chessInstance,
-               float x,Coordenadas y,
-              int z, int estado[][8][2], Nodo* parent): chess(chessInstance) {
+               float x,int z, int estado[][8][2],Coordenadas y, Nodo* parent): chess(chessInstance) {
 
        visit_count = 0;
        value_sum = 0; 
@@ -65,8 +64,8 @@
           chess.siguiente_estado_copy(movimientos_expandibles[index_accion], tablero);
           
           // Crear el nodo hijo con el nuevo estado
-          Nodo hijo(chess, constante,movimientos_expandibles[index_accion],-jugador, 
-                    tablero, this);
+          Nodo hijo(chess, constante,-jugador, 
+                    tablero,movimientos_expandibles[index_accion], this);
           hijos.push_back(hijo);
           // quitar la accion tomada de los movimientos disponibles
           movimientos_expandibles.erase(movimientos_expandibles.begin() + index_accion);
@@ -75,20 +74,40 @@
 
     int Nodo::simulacion(){
         int valor = chess.valor_terminar(jugador);
+        valor = -valor; // en los nodos hijos son turno del oponente
         if (valor) {
           return valor;
         }
-        int estado_rollout[8][8][2];
+        //int estado_rollout[8][8][2];
         //copiar_tablero(this->tablero,estado_rollout);
         int rollout_player = 1;
         Chess juego_rollout;
         juego_rollout.estado_arbitrario(this->tablero);
 
+
         while (true){
+            int index_accion = rand()% movimientos_expandibles.size();
+            juego_rollout.siguiente_estado(movimientos_expandibles[index_accion]);
+            valor = juego_rollout.valor_terminar(rollout_player);
             
+            if (valor){
+                if (rollout_player == -1){
+                    valor = -valor;
+                }
+                return valor;
+            }
+            rollout_player = juego_rollout.obtener_oponente(rollout_player);
         }
        return 0;
     }
 
-    void Nodo::retropropagacion(int valor){}
+    void Nodo::retropropagacion(int valor){
+        value_sum += valor;
+        visit_count += 1;
+
+        valor = -valor;
+        if (padre != nullptr){
+            padre->retropropagacion(valor);
+        }
+    }
 

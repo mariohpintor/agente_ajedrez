@@ -65,5 +65,4 @@ Y cada pieza usualmente se refiere a ella con la inicial del nombre de la pieza,
 - Simular partidas completas para ver si hay errores
 - Implementar ahogado
 - Peon al paso
-- Estudiar punteros y clases en c++
-
+- Borrador completo, debuggear funcion siguiente_estado_copy, busquedas de mcts, 
