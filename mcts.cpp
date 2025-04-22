@@ -8,20 +8,23 @@
         num_busquedas = searches;
     }
 
-    std::vector<float> MCTS::busquedas(int estado[][8][2]){
+    void  MCTS::busquedas(int estado[][8][2]){
         // definir raíz
         int valor;
-        Nodo raiz(chess,constante,-1,chess.tablero); // accion y padre args por defecto
+        int jugador = -1;
+        Nodo raiz(chess,constante,jugador,chess.tablero); 
         
         for (int i = 0;i < num_busquedas; i++ ){
             while (raiz.completamente_expandido()){
                 // selección
                 int hijo_seleccionado = raiz.seleccion();   
             }
-            valor = chess.valor_terminar();
+
+            valor = chess.valor_terminar(jugador);
+            //std::cout << "valor "<< valor<< std::endl;
             valor = -valor;
             
-            if (!valor){
+            if (valor!= 1){
                 // expansión
                 raiz.expandir(raiz.hijos);
                 // simulación
@@ -31,7 +34,7 @@
             raiz.retropropagacion(valor);
         }
 
-        std::vector<float> probs_acciones;
+        
         float sum = 0;
         for (int j = 0; j < raiz.hijos.size(); j++){
             sum+= raiz.hijos[j].visit_count;
@@ -40,6 +43,5 @@
             probs_acciones.push_back(raiz.hijos[j].visit_count/sum);
         }
 
-        return probs_acciones;
     }
     

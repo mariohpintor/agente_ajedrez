@@ -241,7 +241,7 @@ Chess::Chess() {
        // ver cada pieza que puede moverse en el  tablero actual y ver a donde puede moverse
        // condiciones
        vector<Coordenadas> movimientos;
-
+       
        
        for (int i = 0; i < 8; i++){
            for(int j = 0; j < 8; j++ ){
@@ -257,8 +257,22 @@ Chess::Chess() {
                            //primer movimiento peon
                            if (i == 6 && tablero[i-2][j][1]==0){movimientos.push_back({i,j,i-2,j});}
                            // captura
+                           
                            if (tablero[i-1][j-1][1]==1){movimientos.push_back({i,j,i-1,j-1});}
                            if (tablero[i-1][j+1][1]==1){movimientos.push_back({i,j,i-1,j+1});}
+                           // peon al paso 
+                           if (i == 3){
+                              if (tablero[i][j-1][1] == 1){movimientos.push_back({i,j,i-1,j-1});}
+                              if (tablero[i][j+1][1] == 1){movimientos.push_back({i,j,i-1,j+1});}
+                           }
+
+                           // CORONACION
+                           if (i == 0){
+                              //int opcion;
+                              //cout << "Coronacion: 2,3,4,5"<< endl;
+                              //cin >> opcion;
+                              tablero[i][j][1] = 5; 
+                           }
                         } else{// caso negro
                             if(tablero[i+1][j][1]==0){
                             movimientos.push_back({i,j,i+1,j});}//j = j-1
@@ -267,6 +281,18 @@ Chess::Chess() {
                             // captura
                             if (tablero[i+1][j+1][0]==-1){movimientos.push_back({i,j,i+1,j+1});}
                             if (tablero[i+1][j-1][0]==-1){movimientos.push_back({i,j,i+1,j-1});}
+                             // peon al paso 
+                           if (i == 4){
+                              if (tablero[i][j-1][1] == 1){movimientos.push_back({i,j,i+1,j-1});}
+                              if (tablero[i][j+1][1] == 1){movimientos.push_back({i,j,i+1,j+1});}
+                           }
+                           // CORONACION
+                           if (i == 7){
+                              /*int opcion;
+                              cout << "Coronacion: 2,3,4,5"<< endl;
+                              cin >> opcion;*/
+                              tablero[i][j][1] = 5; 
+                           }
                         }
                       continue;
                     case 2:
@@ -589,9 +615,18 @@ Chess::Chess() {
    }
    // obtener valor y terminar
    int Chess::valor_terminar(int jugador) {
-    if (checar_jaque_mate()){return 1;} // gano último jugador
-    else if(movimientos_validos(jugador).size() < 1){ return 0;} // ahogado
-    else {return 0;} // empate
+    if (checar_jaque(jugador)){
+        movimientos_validos_jaque(jugador);
+        if (checar_jaque_mate()){
+        cout << "Gana "<< jugador<< endl; 
+        return 1;} // gano último jugador
+    } 
+    else if(movimientos_validos(jugador).size() < 1){ 
+       cout << "Rey "<< jugador<< "Ahogado"<< endl;
+       return 0;} // ahogado
+    else {
+       cout << "El juego continua" << endl;
+       return 0;} 
     return 0;
    }
    // obtener oponente

@@ -74,6 +74,7 @@
 
     int Nodo::simulacion(){
         int valor = chess.valor_terminar(jugador);
+        //std::cout << "valor "<< valor<< std::endl;
         valor = -valor; // en los nodos hijos son turno del oponente
         if (valor) {
           return valor;
@@ -84,11 +85,22 @@
         Chess juego_rollout;
         juego_rollout.estado_arbitrario(this->tablero);
 
-
-        while (true){
-            int index_accion = rand()% movimientos_expandibles.size();
-            juego_rollout.siguiente_estado(movimientos_expandibles[index_accion]);
+        int contador = 0;
+        while (contador < 101){
+            if (rollout_player == -1){
+              int index_accion = rand()% movimientos_expandibles.size();
+              juego_rollout.siguiente_estado(movimientos_expandibles[index_accion]);
+            } else{
+               // movimientos del oponente
+               juego_rollout.movimientos = juego_rollout.movimientos_validos(rollout_player);
+               int index_accion = rand()% movimientos_expandibles.size();
+               juego_rollout.siguiente_estado(juego_rollout.movimientos.at(index_accion));
+              }
             valor = juego_rollout.valor_terminar(rollout_player);
+            std::cout << "valor "<< valor<<", contador "<< contador << std::endl;
+            contador+= 1;
+            juego_rollout.visualizar_tablero();
+            
             
             if (valor){
                 if (rollout_player == -1){

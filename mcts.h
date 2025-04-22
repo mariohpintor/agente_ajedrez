@@ -13,10 +13,11 @@ class MCTS{
       // Constructor
       float constante;
       int num_busquedas;
+      std::vector<float> probs_acciones;
 
-      MCTS(Chess& chessInstance, float c,int searches)
+      MCTS(Chess& chessInstance, float c,int searches);
       // Métodos
-      std::vector<float> busquedas(int estado[][8][2]);
+       void busquedas(int estado[][8][2]);
 };
 
 #endif  // Fin de la guardia de inclusión
